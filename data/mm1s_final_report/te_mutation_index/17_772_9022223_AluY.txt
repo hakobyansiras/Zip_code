@@ -1,0 +1,6 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	17_772_9022223_AluY	291	G	A	G	A	4	55
+2	17_772_9022223_AluY	295	C	A	C	T	10	26
+3	17_772_9022223_AluY	300	T	A	T	-	35	-
+4	17_772_9022223_AluY	305	T	A	T	-	34	-
+5	17_772_9022223_AluY	310	T	A	T	-	39	-

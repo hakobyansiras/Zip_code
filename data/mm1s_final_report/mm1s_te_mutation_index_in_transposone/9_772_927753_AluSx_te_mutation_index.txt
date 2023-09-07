@@ -1,0 +1,7 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+9_772_927753_AluSx 221 T G T G,A 13 192,23 direct
+9_772_927753_AluSx 287 T A T - 33 - direct
+9_772_927753_AluSx 291 T A T - 33 - direct
+9_772_927753_AluSx 295 T A T - 28 - direct
+9_772_927753_AluSx 299 T A T - 24 - direct
+9_772_927753_AluSx 306 T A T - 4 - direct

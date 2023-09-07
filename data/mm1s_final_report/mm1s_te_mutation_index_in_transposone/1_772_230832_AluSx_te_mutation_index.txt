@@ -1,0 +1,19 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+1_772_230832_AluSx 307 C T C - 1 - reverse complement
+1_772_230832_AluSx 304 C T C - 1 - reverse complement
+1_772_230832_AluSx 302 C T C - 3 - reverse complement
+1_772_230832_AluSx 300 C T C - 3 - reverse complement
+1_772_230832_AluSx 289 A T A - 4 - reverse complement
+1_772_230832_AluSx 272 T C T - 18 - reverse complement
+1_772_230832_AluSx 262 T C T - 23 - reverse complement
+1_772_230832_AluSx 244 A G A G 23 15 reverse complement
+1_772_230832_AluSx 202 T C T C 6 53 reverse complement
+1_772_230832_AluSx 197 A G A G 32 32 reverse complement
+1_772_230832_AluSx 196 G A G A 10 52 reverse complement
+1_772_230832_AluSx 194 G T G T 3 58 reverse complement
+1_772_230832_AluSx 193 A C A C 9 55 reverse complement
+1_772_230832_AluSx 191 T C T C 18 48 reverse complement
+1_772_230832_AluSx 175 A G A - 70 - reverse complement
+1_772_230832_AluSx 155 A G A - 133 - reverse complement
+1_772_230832_AluSx 144 T C T - 167 - reverse complement
+1_772_230832_AluSx 140 T C T - 356 - reverse complement

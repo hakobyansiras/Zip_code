@@ -1,0 +1,21 @@
+Transposone_ID,Location relative to insertion,Contig position,Insertion position,Transposon position,Transposone orientation,Distance from insertion,Pacbio sequence,Pacbio position,Pacbio direction,blast chr,blast position,blast orientation
+1_772_230832_AluSx,intersect,Jan-29,1616-1669,1570-1871,reverse complement,0,NA,NA,,chr2,86528424 - 86530643,Plus/Plus
+1_772_230832_L1MB3,right,Jan-77,1616-1669,1737-2677,reverse complement,-68,NA,NA,,chr2,86528424 - 86530643,Plus/Plus
+2_772_501501_L2a,intersect,Jan-31,1372-2331,941-1454,direct,0,NA,NA,,chr14,32672352-32670273,Plus/Minus
+2_772_501501_THE1C,intersect,Jan-19,1344-2990,2050-2519,direct,0,NA,NA,,chr14,32672352-32670273,Plus/Minus
+3_772_684326,intersect,Jan-56,2355-2461,2346-2656,reverse complement,0,NA,NA,,chr13,22562455-22559956,Plus/Minus
+3_772_684326_L1ME4b,intersect,Jan-86,2390-2477,1767-2686,reverse complement,0,NA,NA,,chr13,22562455-22559956,Plus/Minus
+4_772_691569_AluSx,intersect,Jan-72,2547-2494,1573-1880,direct,0,AGCACACAGAG,3710,revrse,chr7,,
+5_772_694316_AluY,intersect,Jan-23,419-446,153-469,reverse complement,0,NA,NA,,chr12 LIM domain only 3,58715-55601,Plus/Minus
+6_772_746702_AluY,intersect,1-1628,1327-1433,1327-1628,reverse complement,0,NA,NA,,chr8,15650931-15649499,Plus/Minus
+8_772_906461_AluY,intersect,Jan-16,2445-2709,2505-2816,direct,0,NA,NA,,chr3,156308018-156310801,Plus/Plus
+9_772_927753_AluJb,intersect,1-1096,277-318,1-317,direct,0,NA,NA,,chr10,103114349-103115218,Plus/Plus
+9_772_927753_AluSx,intersect,1-1096,227-318,1-312,direct,0,NA,NA,,chr10,103114349-103115218,Plus/Plus
+10_772_1086777_MER11C,intersect,Jan-72,1584-3024,2188-3272,reverse complement,0,NA,NA,,chr14,46404852-46401883,Plus/Plus
+14_772_4370313_AluY,intersect,1-1632,213-261,1-311,reverse complement,0,NA,NA,,chr2,178310609-178312037,Plus/Plus
+15_772_8901366_MER11B,left,Jan-15,2789-2911,1-1235,reverse complement,1554,NA,NA,,chr1,145617544-145619382,Plus/Plus
+16_772_8962148_AluSx,intersect,1-1235,1031-1111,883-1190,reverse complement,0,NA,NA,,chr3,180870641-180871874,Plus/Plus
+17_772_9022223_AluY,intersect,1-1786,133-284,1-312,direct,0,NA,NA,,chr6,143000057-143001731,Plus/Plus
+18_772_9100610_AluSx,intersect,Jan-43,381-552,261-574,direct,0,GCACACAGAG,3209,revrse,chr5,71047678-71042940,Plus/Minus
+18_772_9100610_AluY,intersect,Jan-43,381-552,261-574,direct,0,GCACACAGAG,3209,revrse,chr5,71047678-71042940,Plus/Minus
+18_772_9100610_Tigger3a,right,Jan-64,40-210,2599-2941,direct,2389,GCACACAGAG,3230,revrse,chr5,71047678-71042940,Plus/Minus

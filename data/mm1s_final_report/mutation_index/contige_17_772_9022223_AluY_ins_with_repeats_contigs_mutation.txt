@@ -1,0 +1,6 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat
+17_772_9022223_AluY	291	G	A
+17_772_9022223_AluY	295	C	A
+17_772_9022223_AluY	300	T	A
+17_772_9022223_AluY	305	T	A
+17_772_9022223_AluY	310	T	A

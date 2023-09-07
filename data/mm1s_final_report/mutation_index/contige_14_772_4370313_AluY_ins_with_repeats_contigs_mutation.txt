@@ -1,0 +1,2 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat
+14_772_4370313_AluY	308	A	G

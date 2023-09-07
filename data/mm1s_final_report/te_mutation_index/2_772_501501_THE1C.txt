@@ -1,0 +1,9 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	2_772_501501_THE1C	2195	T	c	T	-	2	-
+2	2_772_501501_THE1C	2201	A	g	A	-	0	-
+3	2_772_501501_THE1C	2214	A	g	A	-	0	-
+4	2_772_501501_THE1C	2241	T	g	T	-	0	-
+5	2_772_501501_THE1C	2254	A	g	A	-	0	-
+6	2_772_501501_THE1C	2262	T	c	T	-	10	-
+7	2_772_501501_THE1C	2264	C	a	C	-	10	-
+8	2_772_501501_THE1C	2269	A	g	A	-	0	-

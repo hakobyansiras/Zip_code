@@ -1,0 +1,15 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+8_P201812-2_4215934_AluSx 4 T C T - 99 - direct
+8_P201812-2_4215934_AluSx 155 A G T - 99 - direct
+8_P201812-2_4215934_AluSx 156 T C G - 131 - direct
+8_P201812-2_4215934_AluSx 273 A G A - 30 - direct
+8_P201812-2_4215934_AluSx 285 G A A - 17 - direct
+8_P201812-2_4215934_AluSx 296 G A T - - - direct
+8_P201812-2_4215934_AluSx 298 G A C - - - direct
+8_P201812-2_4215934_AluSx 299 C A A - - - direct
+8_P201812-2_4215934_AluSx 301 G A A - - - direct
+8_P201812-2_4215934_AluSx 303 T A A - - - direct
+8_P201812-2_4215934_AluSx 305 T A G - - - direct
+8_P201812-2_4215934_AluSx 306 G A A - - - direct
+8_P201812-2_4215934_AluSx 312 G A - - - - direct
+8_P201812-2_4215934_AluSx 313 G A - - - - direct

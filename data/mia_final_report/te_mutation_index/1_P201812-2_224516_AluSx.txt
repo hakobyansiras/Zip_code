@@ -1,0 +1,6 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	1_P201812-2_224516_AluSx	3398	A	G	A	-	31	-
+2	1_P201812-2_224516_AluSx	3402	A	G	A	-	82	-
+3	1_P201812-2_224516_AluSx	3547	G	C	G	-	147	-
+4	1_P201812-2_224516_AluSx	3591	G	C	G	-	158	-
+5	1_P201812-2_224516_AluSx	3594	G	T	T	-	176	-

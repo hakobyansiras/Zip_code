@@ -1,0 +1,1322 @@
+---
+title: "blast_analtsis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setdir}
+setwd("/storage/insertion_detection_pamir")
+```
+
+## Insertion statistics
+
+Read vcf files from Pamir
+```{r read_vcf}
+# read vcfs
+setwd("/storage/insertion_detection_pamir")
+mia_match_vcf <- read.table("data/vcf/MIA_matched_with_ref.vcf", as.is = T)
+mm1s_match_vcf <- read.table("data/vcf/MM1S_matchet_with_ref.vcf", as.is = T)
+
+mia_mismatch_vcf <- read.table("data/vcf/MIA_mismatch_with_ref.vcf", as.is = T)
+mm1s_mismatch_vcf <- read.table("data/vcf/MM1S_mismatch_with_ref.vcf", as.is = T)
+
+mia_cell_vcf <- read.table("data/vcf/MIA_cell_line_with_ref.vcf", as.is = T )
+mm1s_cell_vcf <- read.table("data/vcf/MM1S_cell_line_with_ref.vcf", as.is = T )
+
+#define column names
+colnames(mia_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+colnames(mm1s_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+colnames(mia_mismatch_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+colnames(mm1s_mismatch_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+colnames(mia_cell_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+colnames(mm1s_cell_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+
+# add length of the insertions
+mia_match_vcf$ins_length <- sapply(mia_match_vcf$ALT, nchar)
+mm1s_match_vcf$ins_length <- sapply(mm1s_match_vcf$ALT, nchar)
+mia_mismatch_vcf$ins_length <- sapply(mia_mismatch_vcf$ALT, nchar)
+mm1s_mismatch_vcf$ins_length <- sapply(mm1s_mismatch_vcf$ALT, nchar)
+mia_cell_vcf$ins_length <- sapply(mia_cell_vcf$ALT, nchar)
+mm1s_cell_vcf$ins_length <- sapply(mm1s_cell_vcf$ALT, nchar)
+```
+
+Calculate stat for insertions (vcf files)
+```{r insertion vcf statistics}
+#define number of insertions
+paste("nrow mm1s_match_vcf = ", nrow(mm1s_match_vcf))
+paste("nrow mm1s_mismatch_vcf = ",nrow(mm1s_mismatch_vcf))
+paste("nrow mm1s_cell_vcf = ",nrow(mm1s_cell_vcf))
+paste("nrow mia_match_vcf = ",nrow(mia_match_vcf))
+paste("nrow mia_mismatch_vcf = ",nrow(mia_mismatch_vcf))
+paste("nrow mia_cell_vcf = ",nrow(mia_cell_vcf))
+
+#define SD insertions length
+paste("SD mm1s_match_vcf = ", sd(mm1s_match_vcf$ins_length))
+paste("SD mm1s_mismatch_vcf = ",sd(mm1s_mismatch_vcf$ins_length))
+paste("SD mm1s_cell_vcf = ",sd(mm1s_cell_vcf$ins_length))
+paste("SD mia_match_vcf = ",sd(mia_match_vcf$ins_length))
+paste("SD mia_mismatch_vcf = ",sd(mia_mismatch_vcf$ins_length))
+paste("SD mia_cell_vcf = ", sd(mia_cell_vcf$ins_length))
+
+# define statistics
+
+mm1s_match_vcf_stat <- as.matrix(summary(mm1s_match_vcf$ins_length))
+colnames(mm1s_match_vcf_stat) <- "mm1s_match_vcf"
+mm1s_match_vcf_stat
+
+mm1s_mismatch_vcf_stat <- as.matrix(summary(mm1s_mismatch_vcf$ins_length))
+colnames(mm1s_mismatch_vcf_stat) <- "mm1s_mismatch_vcf"
+mm1s_mismatch_vcf_stat
+
+mm1s_cell_vcf_stat <- as.matrix(summary(mm1s_cell_vcf$ins_length))
+colnames(mm1s_cell_vcf_stat) <- "mm1s_cell_vcf"
+mm1s_cell_vcf_stat
+
+mia_match_vcf_stat <- as.matrix(summary(mia_match_vcf$ins_length))
+colnames(mia_match_vcf_stat) <- "mia_match_vcf"
+mia_match_vcf_stat
+
+mia_mismatch_vcf_stat <- as.matrix(summary(mia_mismatch_vcf$ins_length))
+colnames(mia_mismatch_vcf_stat) <- "mia_mismatch_vcf"
+mia_mismatch_vcf_stat
+
+mia_cell_vcf_stat <- as.matrix(summary(mia_cell_vcf$ins_length))
+colnames(mia_cell_vcf_stat) <- "mia_cell_vcf"
+mia_cell_vcf_stat
+
+rm(mm1s_match_vcf_stat, mm1s_mismatch_vcf_stat, mm1s_cell_vcf_stat, mia_match_vcf_stat, mia_mismatch_vcf_stat, mia_cell_vcf_stat)
+```
+
+Vizualization of Insertion lengths (boxplot)
+
+```{r insertion_lngth_viz}
+combined_ins_length <- data.frame(alignment_length = NA,
+                                  group = NA)
+combined_ins_length <- rbind(combined_ins_length, data.frame(alignment_length =mm1s_match_vcf$ins_length,
+                                                             group = "mm1s_match"))
+combined_ins_length <- rbind(combined_ins_length, data.frame(alignment_length =mm1s_cell_vcf$ins_length,
+                                                             group = "mm1s_cell_line"))
+combined_ins_length <- rbind(combined_ins_length, data.frame(alignment_length =mia_match_vcf$ins_length,
+                                                             group = "mia_match"))
+combined_ins_length <- rbind(combined_ins_length, data.frame(alignment_length =mia_cell_vcf$ins_length,
+                                                             group = "mia_cell_line"))
+combined_ins_length <- rbind(combined_ins_length, data.frame(alignment_length =mm1s_mismatch_vcf$ins_length,
+                                                             group = "mm1s_mismatch"))
+combined_ins_length <- rbind(combined_ins_length, data.frame(alignment_length =mia_mismatch_vcf$ins_length,
+                                                             group = "mia_mismatch"))
+combined_ins_length <- na.omit(combined_ins_length)
+
+boxplot(combined_ins_length$alignment_length ~ combined_ins_length$group, main = "Insertion length",
+        xlab = "group", ylab = "Insertion length")
+```
+
+## BLAST analysis
+BlAST analysis script - scr/blast.sh
+Includes blast db creation for 772_assembly_full-6_named.fa and P201812-2_assembly_full-6_named.fa
+Than blast analysis for:
+MM1S samples - MM1S_cell_line_with_ref.fa, MM1S_matchet_with_ref.fa, MM1S_mismatch_with_ref.fa
+MIA samples -MIA_cell_line_with_ref.fa, MIA_matched_with_ref.fa, MIA_mismatch_with_ref.fa
+
+Read blast results
+
+```{r read_blast}
+#read blast output
+mm1s_match <- read.table("result/assembly_blast/MM1S_matchet_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mia_match <- read.table("result/assembly_blast/MIA_matched_P201812-2_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_mismatch <- read.table("result/assembly_blast/MM1S_mismatch_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mia_mismatch <- read.table("result/assembly_blast/MIA_mismatch_P201812-2_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_cell_line <- read.table("result/assembly_blast/MM1S_cell_line_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mia_cell_line <- read.table("result/assembly_blast/MIA_cell_line_P201812-2_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+
+#define column name
+colnames(mm1s_match) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mia_match) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_cell_line) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                         "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mia_cell_line) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                         "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_mismatch) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                             "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mia_mismatch) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                             "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+```
+
+Statistics for insertion
+
+```{r blast}
+
+# define number of insertions
+####
+paste("# inst mm1s_match = ", length(mm1s_match$query))
+paste("# unique inst mm1s_match = ", length(unique(mm1s_match$query)))
+paste("# inst mm1s_mismatch = ", length(mm1s_mismatch$query))
+paste("# unique inst mm1s_mismatch = ", length(unique(mm1s_mismatch$query)))
+paste("# inst mm1s_cell_line = ", length(mm1s_cell_line$query))
+paste("# unique inst mm1s_cell_line = ", length(unique(mm1s_cell_line$query)))
+paste("# inst mia_match = ", length(mia_match$query))
+paste("# unique inst mia_match = ", length(unique(mia_match$query)))
+paste("# inst mia_mismatch = ", length(mia_mismatch$query))
+paste("# unique inst mia_mismatch = ", length(unique(mia_mismatch$query)))
+paste("# inst mia_cell_line = ", length(mia_cell_line$query))
+paste("# unique inst mia_cell_line = ", length(unique(mia_cell_line$query)))
+
+# visualization
+combined_aln_length <- data.frame(alignment_length = NA,
+                                  group = NA)
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mm1s_match$alignment_length,
+                                                             group = "mm1s_match"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mm1s_cell_line$alignment_length,
+                                                             group = "mm1s_cell_line"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mia_match$alignment_length,
+                                                             group = "mia_match"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mia_cell_line$alignment_length,
+                                                             group = "mia_cell_line"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mm1s_mismatch$alignment_length,
+                                                             group = "mm1s_mismatch"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mia_mismatch$alignment_length,
+                                                             group = "mia_mismatch"))
+combined_aln_length <- na.omit(combined_aln_length)
+
+boxplot(combined_aln_length$alignment_length ~ combined_aln_length$group, main = "Alignment length",
+        xlab = "group", ylab = "Alignment length")
+```
+
+Define unique hits for each sample, compared with cell lines.
+Unique hits of mm1s_match compared with mm1s_cell_line \ 
+Unique hits of mia_match compared with mia_cell_line \ 
+Unique hits of mm1s_mismatch_uniq compared with mm1s_cell_line \ 
+Unique hits of mia_mismatch_uniq compared with  mia_cell_line \ 
+ 
+
+```{r blast_uniq_hits}
+## define unique hits for mm1s_match compared with mm1s cell line
+
+mm1s_match_uniq <- mm1s_match[-which(mm1s_match$subject %in% intersect(mm1s_match$subject, mm1s_cell_line$subject)),]
+hist(mm1s_match_uniq$alignment_length, main = "mm1s_match unique hits", xlab = "Alignment length")
+
+## define unique hits for mm1s_match compared with mia cell line
+mia_match_uniq <- mia_match[-which(mia_match$subject %in% intersect(mia_match$subject, mia_cell_line$subject)),]
+hist(mia_match_uniq$alignment_length, main = "mia_match unique hits", xlab = "Alignment length")
+
+## define unique hits for mm1s_mismatch compared with  mm1s cell line
+
+mm1s_mismatch_uniq <- mm1s_mismatch[-which(mm1s_mismatch$subject %in% intersect(mm1s_mismatch$subject, mm1s_cell_line$subject)),]
+hist(mm1s_mismatch_uniq$alignment_length, main = "mm1s_mismatch unique hits", xlab = "Alignment length")
+
+## define unique hits for mia_mismatch compared with  mia cell line
+mia_mismatch_uniq <- mia_mismatch[-which(mia_mismatch$subject %in% intersect(mia_mismatch$subject, mia_cell_line$subject)),]
+hist(mia_mismatch_uniq$alignment_length, main = "mia_mismatch unique hits", xlab = "Alignment length")
+```
+Define statistics for unique samples
+
+```{r unique_sample_stat}
+##### define number of hits
+#match
+# paste("# hits mm1s_match = ", length(mm1s_match_uniq$subject))
+paste("# unique hits mm1s_match = ", length(unique(mm1s_match_uniq$subject)))
+mm1s_match_aln_length_stat <- as.matrix(summary(mm1s_match_uniq$alignment_length))
+colnames(mm1s_match_aln_length_stat) <- "mm1s_match_uniq"
+mm1s_match_aln_length_stat
+
+
+paste("# hits mia_match = ", length(mia_match_uniq$subject))
+paste("# unique hits mia_match = ", length(unique(mia_match_uniq$subject)))
+mia_match_aln_length_stat <- as.matrix(summary(mia_match_uniq$alignment_length))
+colnames(mia_match_aln_length_stat) <- "mia_match_uniq"
+mia_match_aln_length_stat
+
+#mismatch
+paste("# hits mm1s_mismatch = ", length(mm1s_mismatch_uniq$subject))
+paste("# unique hits mm1s_mismatch = ", length(unique(mm1s_mismatch_uniq$subject)))
+mm1s_mismatch_aln_length_stat <- as.matrix(summary(mm1s_mismatch_uniq$alignment_length))
+colnames(mm1s_mismatch_aln_length_stat) <- "mm1s_mismatch_uniq"
+mm1s_mismatch_aln_length_stat
+
+paste("# hits mia_mismatch = ", length(mia_mismatch_uniq$subject))
+paste("# unique hits mia_mismatch = ", length(unique(mia_mismatch_uniq$subject)))
+mia_mismatch_aln_length_stat <- as.matrix(summary(mia_mismatch_uniq$alignment_length))
+colnames(mia_mismatch_aln_length_stat) <- "mia_mismatch_uniq"
+mia_mismatch_aln_length_stat
+
+rm(mm1s_match_aln_length_stat, mia_match_aln_length_stat, mm1s_mismatch_aln_length_stat, mia_mismatch_aln_length_stat)
+
+```
+
+
+
+Define unique hits for match samples, compared with mistatched and cell lines
+
+```{r blast_uniq_hits_1}
+## compare unique mm1S match with mm1s mismatch, define mm1S match unique
+mm1s_match_mm1s_mismatch_uniq <- mm1s_match_uniq[-which(mm1s_match_uniq$subject %in% intersect(mm1s_match_uniq$subject, mm1s_mismatch$subject)),]
+
+## compare unique mia match with mia mismatch, define mia match unique
+mia_match_mia_mismatch_uniq <- mia_match_uniq[-which(mia_match_uniq$subject %in% intersect(mia_match_uniq$subject, mia_mismatch$subject)),]
+
+print("MM1S")
+# number of hits mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits = ", length(mm1s_match_mm1s_mismatch_uniq$subject))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits = ",length(unique(mm1s_match_mm1s_mismatch_uniq$subject)))
+# number of hits > 80% intensity mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits (>80) = ", length(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 80 ]))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits (>80) = ", length(unique(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 80 ])))
+# number of hits > 90% intensity mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits (>90) = ", length(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 90 ]))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits (>90) = ", length(unique(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 90 ])))
+# number of hits == 100% intensity mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits (100%) = ", length(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity`  == 100 ]))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits (100%) = ", length(unique(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` == 100])))
+
+print("MIA")
+# number of hits mia
+paste("mia_match_mia_mismatch_uniq # hits = ", length(mia_match_mia_mismatch_uniq$subject))
+paste("mia_match_mia_mismatch_uniq # unique hits = ",length(unique(mia_match_mia_mismatch_uniq$subject)))
+# number of hits > 80% intensity mia
+paste("mia_match_mia_mismatch_uniq # hits (>80) = ", length(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 80 ]))
+paste("mia_match_mia_mismatch_uniq # unique hits (>80) = ", length(unique(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 80 ])))
+# number of hits > 90% intensity mia
+paste("mia_match_mia_mismatch_uniq # hits (>90) = ", length(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 90 ]))
+paste("mia_match_mia_mismatch_uniq # unique hits (>90) = ", length(unique(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 90 ])))
+# number of hits == 100% intensity mia
+paste("mia_match_mia_mismatch_uniq # hits (100%) = ", length(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` == 100 ]))
+paste("mia_match_mia_mismatch_uniq # unique hits (100%) = ", length(unique(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` == 100])))
+
+```
+
+Save unique hits and insertions
+
+```{r save_uniq}
+# MM1S
+write.table(paste(">", unique(mm1s_match_mm1s_mismatch_uniq$subject), sep = ""), "result/assembly_blast/MM1S_match_unique_contigs.txt", quote = F, row.names = F,col.names = F, sep = "\t")
+write.table(mm1s_match_mm1s_mismatch_uniq, "result/assembly_blast/MM1S_match_unique_contigs_blast_result.txt")
+
+#MIA
+write.table(paste(">", unique(mia_match_mia_mismatch_uniq$subject), sep = ""), "result/assembly_blast/MIA_match_unique_contigs.txt",quote = F, row.names = F,col.names = F, sep = "\t")
+write.table(mia_match_mia_mismatch_uniq, "result/assembly_blast/MIA_match_unique_contigs_blast_result.txt")
+```
+
+
+
+##################################################################################
+## MM1S unique contigs blast
+##################################################################################
+The contigs from mm1s_match_mm1s_mismatch_uniq are blast on MM ct DNA contigs (scr/blast_ctdna.sh code)
+
+MM1S_match_unique_contigs_772_assembly_2024_blast.txt
+MM1S_match_unique_contigs_772_assembly_2025_blast.txt
+MM1S_match_unique_contigs_772_assembly_39652-530_blast.txt
+MM1S_match_unique_contigs_772_assembly_910_blast.txt
+MM1S_match_unique_contigs_772_assembly_low_772_blast.txt
+
+```{r ctDNA_contigs_blast}
+mm1s_uniq_2024_blast <- read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_2024_blast.txt", 
+                                   colClasses = c(rep("character", times = 2), rep("numeric", times = 10)) )
+mm1s_uniq_2025_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_2025_blast.txt",
+                                    colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_uniq_39652_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_39652-530_blast.txt",
+                                     colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_uniq_910_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_910_blast.txt",
+                                   colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_uniq_772_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_low_772_blast.txt",
+                                   colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+
+
+colnames(mm1s_uniq_2024_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_2025_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_39652_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_910_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_772_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+
+#Read vcf files and mm1s_match_mm1s_mismatch_uniq
+mm1s_match_vcf <- read.table("data/vcf/MM1S_matchet_with_ref.vcf", as.is = T)
+colnames(mm1s_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+mm1s_match_mm1s_mismatch_uniq <- read.table("result/assembly_blast/MM1S_match_unique_contigs_blast_result.txt")
+
+# summary(mm1s_uniq_2024_blast$alignment_length[which(mm1s_uniq_2024_blast$query %in% uniq_ins)])
+# summary(mm1s_uniq_2025_blast$alignment_length[which(mm1s_uniq_2025_blast$query %in% uniq_ins)])
+# summary(mm1s_uniq_39652_blast$alignment_length[which(mm1s_uniq_39652_blast$query %in% uniq_ins)])
+# summary(mm1s_uniq_910_blast$alignment_length[which(mm1s_uniq_910_blast$query %in% uniq_ins)])
+```
+
+Once the unique contigs are determined, for each contig perform multiple alignmentn beetween all ctDNA samples
+Define contigs which have length > 600bp and uniq between all ctDNA blast hits
+
+```{r contig_unique}
+mm1s_uniq_2024_blast_100 <- mm1s_uniq_2024_blast[mm1s_uniq_2024_blast$alignment_length > 650, ]
+mm1s_uniq_2025_blast_100 <- mm1s_uniq_2025_blast[mm1s_uniq_2025_blast$alignment_length >650, ]
+mm1s_uniq_39652_blast_100 <- mm1s_uniq_39652_blast[mm1s_uniq_39652_blast$alignment_length > 650, ]
+mm1s_uniq_910_blast_100 <- mm1s_uniq_910_blast[mm1s_uniq_910_blast$alignment_length > 650, ]
+mm1s_uniq_772_blast_100 <- mm1s_uniq_772_blast[mm1s_uniq_772_blast$alignment_length > 650, ]
+
+unique_contigs <- list("2024" = mm1s_uniq_2024_blast_100$query, "2025" = mm1s_uniq_2025_blast_100$query,
+            "39652" = mm1s_uniq_39652_blast_100$query, "910" = mm1s_uniq_910_blast_100$query, "772" = mm1s_uniq_772_blast_100$query)
+unique_contigs <- Reduce(intersect, unique_contigs, accumulate = F)
+
+mm1s_match_mm1s_mismatch_uniq <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$X._identity >= 90),]
+mm1s_match_mm1s_mismatch_uniq <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs),]
+
+unique_contigs <- unique_contigs[which(unique_contigs %in% mm1s_match_mm1s_mismatch_uniq$subject)]
+
+## create dirs for alignment
+#system("mkdir data/alignment_contigs")
+```
+
+
+
+for each contigue perform multiple alignmentn beetween all ctDNA samples full 771 sample and  insertions
+
+```{r contig_alignment_insertion}
+
+#####################################################################################################
+# Alignment with only part of the insertion which align to the 772 sample
+for (i in seq_along(unique_contigs)) 
+  {
+  hits <- c(mm1s_uniq_2024_blast_100$subject[mm1s_uniq_2024_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_2025_blast_100$subject[mm1s_uniq_2025_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_39652_blast_100$subject[mm1s_uniq_39652_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_910_blast_100$subject[mm1s_uniq_910_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_772_blast_100$subject[mm1s_uniq_772_blast_100$query %in% unique_contigs[i]])
+  hits <- paste(">", hits, sep = "")
+  
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  
+  #define insertion
+  ind_ins <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs[i]),]
+  
+  insertion <- mm1s_match_vcf$ALT[which(mm1s_match_vcf$ID %in% ind_ins$query)]
+  insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins$query, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+  print(paste("fasta preparation", i))
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/2024_assembly-6_named.fa > data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa > data/alignment_contigs/2024_assembly-6_uniq_contigs.fa")
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/2025_assembly-6_named.fa > data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa > data/alignment_contigs/2025_assembly-6_uniq_contigs.fa")
+  system("rm data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/39652-530_S1_assembly-6_named.fa > data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa > data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa")
+  system("rm data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/910_assembly-6_named.fa > data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa > data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/772_assembly-6_named.fa > data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  
+  ## Add full contig
+  system(paste("grep -w -A 1 ", unique_contigs[i], " data/fasta/772_assembly_full-6_named.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa")
+
+    # 
+    system("cat data/alignment_contigs/2024_assembly-6_uniq_contigs.fa data/alignment_contigs/2025_assembly-6_uniq_contigs.fa  data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa  data/alignment_contigs/insertion.fa data/alignment_contigs/repeatmasker.fa > data/alignment_contigs/combined_unique_contigs.fa")
+  
+  print(paste("Alignment", i))
+  # Alignment with mafft
+  system(paste("mafft --thread 25 --reorder --adjustdirection data/alignment_contigs/combined_unique_contigs.fa > data/alignment_contigs/aligned_unique_contigs_adjustdir_insertion_repeatmask/contige_",i, "_",unique_contigs[i],  "_ins_repeats_mafft_aln.fa", sep = ""))
+  
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs.fa data/alignment_contigs/2025_assembly-6_uniq_contigs.fa data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa data/alignment_contigs/combined_unique_contigs.fa data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa data/alignment_contigs/insertion.fa ")
+
+}
+
+```
+
+##RepeatMasker
+
+```{r repeat_masker}
+#convert the namen in repeatmask out file
+#system("awk '{print $5"\t"$10}' result/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus.fa.out >  result/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus_renamed.out")
+repeatmask <- read.table("result/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus_renamed.out", sep = "\t")
+repeatmask <- repeatmask[-c(1:3),]
+#system("mkdir data/alignment_contigs/alignment_with_repeats")
+#convert multiple line fasta into single line
+#system("awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' /home/ubuntu/RepeatMasker/Libraries/RepeatMasker.lib > result/mm1s_uniq_contigs_repeat_mask_sequences/RepeatMasker.fa")
+
+for (i in seq_along(unique_contigs)) 
+  {
+  hits <- c(mm1s_uniq_2024_blast_100$subject[mm1s_uniq_2024_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_2025_blast_100$subject[mm1s_uniq_2025_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_39652_blast_100$subject[mm1s_uniq_39652_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_910_blast_100$subject[mm1s_uniq_910_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_772_blast_100$subject[mm1s_uniq_772_blast_100$query %in% unique_contigs[i]])
+  hits <- paste(">", hits, sep = "")
+  
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  
+    #######################################
+  #######################################
+  #define insertion
+  ind_ins <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs[i]),]
+  ind_ins <- unique(ind_ins$query)
+  insertion <- mm1s_match_vcf$ALT[which(mm1s_match_vcf$ID %in% ind_ins)]
+  #insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+    #######################################
+  #######################################
+  # Contigs
+  print(paste("fasta preparation", i))
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/2024_assembly-6_named.fa > ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/2025_assembly-6_named.fa > ",
+               "data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/39652-530_S1_assembly-6_named.fa > ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/910_assembly-6_named.fa > ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/772_assembly-6_named.fa > ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  
+  ## Add full contig
+  system(paste("grep -w -A 1 ", 
+               unique_contigs[i], 
+               " data/fasta/772_assembly_full-6_named.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa")
+
+ ### add repeats
+  contig <- paste(i, unique_contigs[i], sep = "_")
+  system(paste("grep ", 
+               contig, 
+               " result/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus.fa.out | ",
+               "awk '{print $10}' > result/mm1s_uniq_contigs_repeat_mask_sequences/", 
+               contig,"_ids.txt", sep = ""))
+  system(paste("grep -A1 -f result/mm1s_uniq_contigs_repeat_mask_sequences/",
+               contig, "_ids.txt ",
+               "result/mm1s_uniq_contigs_repeat_mask_sequences/RepeatMasker.fa > ",
+               "result/mm1s_uniq_contigs_repeat_mask_sequences/", contig, "_repeats.fa", sep = "" ))
+  system(paste("awk '!/^(--)/' result/mm1s_uniq_contigs_repeat_mask_sequences/", contig, "_repeats.fa > result/mm1s_uniq_contigs_repeat_mask_sequences/", contig, "_repeats_final.fa", sep = ""))
+  
+    # conbine
+  system(paste("cat ",
+               #contigs
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa  ",
+               #repeats
+               "result/mm1s_uniq_contigs_repeat_mask_sequences/",contig, "_repeats_final.fa ",
+               #output
+               "> data/alignment_contigs/combined_unique_contigs.fa",sep = "" ))
+
+  
+  print(paste("Alignment", i))
+  # Alignment with mafft
+  system(paste("mafft-linsi --thread 25 --reorder --adjustdirection data/alignment_contigs/combined_unique_contigs.fa > data/alignment_contigs/alignment_with_repeats/contige_",i, "_",unique_contigs[i],  "_ins_with_repeats", sep = ""))
+  
+  system(paste("rm ",
+               #contigs
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #conbined contigs
+               "data/alignment_contigs/combined_unique_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa"))
+}
+
+################################################################################################################
+################################################################################################################
+# With CTDNA
+for (i in seq_along(unique_contigs)) 
+  {
+  hits <- c(mm1s_uniq_2024_blast_100$subject[mm1s_uniq_2024_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_2025_blast_100$subject[mm1s_uniq_2025_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_39652_blast_100$subject[mm1s_uniq_39652_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_910_blast_100$subject[mm1s_uniq_910_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_772_blast_100$subject[mm1s_uniq_772_blast_100$query %in% unique_contigs[i]])
+  hits <- paste(">", hits, sep = "")
+  
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  #######################################
+  #######################################
+  #define insertion
+  ind_ins <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs[i]),]
+  ind_ins <- unique(ind_ins$query)
+  insertion <- mm1s_match_vcf$ALT[which(mm1s_match_vcf$ID %in% ind_ins)]
+  #insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+    #######################################
+  #######################################
+ # Contigs
+  print(paste("fasta preparation", i))
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/2024_assembly-6_named.fa > ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/2025_assembly-6_named.fa > ",
+               "data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/39652-530_S1_assembly-6_named.fa > ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/910_assembly-6_named.fa > ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/772_assembly-6_named.fa > ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  
+  ## Add full contig
+  system(paste("grep -w -A 1 ", unique_contigs[i], " data/fasta/772_assembly_full-6_named.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa")
+
+ ### add repeats
+  contig <- paste(i, unique_contigs[i], sep = "_")
+  system(paste("grep ", contig, " result/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus.fa.out | awk '{print $10}' > result/mm1s_uniq_contigs_repeat_mask_sequences/", contig,"_ids.txt", sep = ""))
+  system(paste("grep -A1 -f result/mm1s_uniq_contigs_repeat_mask_sequences/",contig, "_ids.txt result/mm1s_uniq_contigs_repeat_mask_sequences/RepeatMasker.fa > result/mm1s_uniq_contigs_repeat_mask_sequences/", contig, "_repeats.fa", sep = "" ))
+  system(paste("awk '!/^(--)/' result/mm1s_uniq_contigs_repeat_mask_sequences/", contig, "_repeats.fa > result/mm1s_uniq_contigs_repeat_mask_sequences/", contig, "_repeats_final.fa", sep = ""))
+  
+   # Add ct DNA contigs
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_2024_filtered_consensus_renamed.fasta > data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_2024_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+                 unique_contigs[i], 
+                 " data/ctDNA_consensus/contigs_2025_filtered_consensus_renamed.fasta > data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_2025_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i],
+               " data/ctDNA_consensus/contigs_39652_filtered_consensus_renamed.fasta > data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_39652_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_772_filtered_consensus_renamed.fasta > data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_772_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_910_filtered_consensus_renamed.fasta > data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_910_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa")
+  
+    # conbine
+  system(paste("cat ",
+               #contigs
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #ctDNA
+               "data/alignment_contigs/ctdna_2024_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa ",
+               #repeat
+               "result/mm1s_uniq_contigs_repeat_mask_sequences/",contig, "_repeats_final.fa ",
+               #output
+               "> data/alignment_contigs/combined_unique_contigs.fa",sep = ""))
+
+  
+  print(paste("Alignment", i))
+  # Alignment with mafft
+  system(paste("mafft-linsi --thread 25 --reorder --adjustdirection data/alignment_contigs/combined_unique_contigs.fa > data/alignment_contigs/alignment_with_repeats_ctdna/contige_",i, "_",unique_contigs[i],  "_ins_with_repeats_contigs", sep = ""))
+  
+  system(paste("rm ",
+              #contigs
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #ctDNA
+               "data/alignment_contigs/ctdna_2024_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa ",
+               #output
+              "data/alignment_contigs/combined_unique_contigs.fa ",
+              #contig
+              "contigs.txt"))
+
+
+}
+
+
+################################################################################################################
+################################################################################################################
+# With CTDNA seperatly
+for (i in seq_along(unique_contigs)) 
+  {
+
+  hits <- c(mm1s_uniq_2024_blast_100$subject[mm1s_uniq_2024_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_2025_blast_100$subject[mm1s_uniq_2025_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_39652_blast_100$subject[mm1s_uniq_39652_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_910_blast_100$subject[mm1s_uniq_910_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_772_blast_100$subject[mm1s_uniq_772_blast_100$query %in% unique_contigs[i]])
+  hits <- paste(">", hits, sep = "")
+  
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  #######################################
+  #######################################
+  #define insertion
+  ind_ins <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs[i]),]
+  ind_ins <- unique(ind_ins$query)
+  insertion <- mm1s_match_vcf$ALT[which(mm1s_match_vcf$ID %in% ind_ins)]
+  #insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+    #######################################
+  #######################################
+ # Contigs
+  print(paste("fasta preparation", i))
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/2024_assembly-6_named.fa > ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/2025_assembly-6_named.fa > ",
+               "data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/39652-530_S1_assembly-6_named.fa > ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/910_assembly-6_named.fa > ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system(paste("grep -w -A 1 -f ",
+               "data/alignment_contigs/contigs.txt data/fasta/772_assembly-6_named.fa > ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa"))
+  system(paste("awk '!/^(--)/' ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa > ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa"))
+  system("rm data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  
+  ## Add full contig
+  system(paste("grep -w -A 1 ", unique_contigs[i], " data/fasta/772_assembly_full-6_named.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa")
+
+
+  
+   # Add ct DNA contigs
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_2024_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_2024_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+                 unique_contigs[i], 
+                 " data/ctDNA_consensus/contigs_2025_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_2025_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i],
+               " data/ctDNA_consensus/contigs_39652_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_39652_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_772_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_772_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_910_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_910_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa")
+  
+  ### add repeats
+  contig <- paste(i, unique_contigs[i], sep = "_")
+  
+  system(paste("grep ", contig, 
+               " data/alignment_contigs/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus.fa.out ",
+               "| awk '{print $10}' > result/mm1s_uniq_contigs_repeat_mask_sequences/", 
+               contig,"_ids.txt", sep = ""))
+  contig_list <- read.table(file = paste("result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_ids.txt", sep = ""))
+  contig_list <- as.character(unique(contig_list$V1))
+  
+  for (j in seq_along(contig_list)) 
+    {
+      system(paste("grep -A1 ",
+                   contig_list[j],
+                   " result/mm1s_uniq_contigs_repeat_mask_sequences/RepeatMasker.fa > ",
+                   "result/mm1s_uniq_contigs_repeat_mask_sequences/", contig,"_",contig_list[j], "_repeats.fa", sep = "" ))
+      system(paste("awk '!/^(--)/' ",
+                   "result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_",contig_list[j], "_repeats.fa > ",
+                   "result/mm1s_uniq_contigs_repeat_mask_sequences/", contig,"_",contig_list[j], "_repeats_final.fa", sep = ""))
+      system(paste(" rm result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_",contig_list[j], "_repeats.fa", sep = "" ))
+      
+          # combine
+      system(paste("cat ",
+               #contigs
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #ctDNA
+               "data/alignment_contigs/ctdna_2024_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa ",
+               #repeat
+               "result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_",contig_list[j], "_repeats_final.fa ",
+               #output
+               "> data/alignment_contigs/combined_unique_contigs.fa",sep = ""))
+  
+               print(paste("Alignment", i))
+                 # Alignment with mafft
+               system(paste("mafft-linsi --thread 25 --reorder --adjustdirection ",
+                             "data/alignment_contigs/combined_unique_contigs.fa > ",
+                             "data/alignment_contigs/alignment_with_repeats_ctdna_sep_repeats/contige_",i, "_",unique_contigs[i],"_",contig_list[j],  "_ins_with_repeats_contigs.fa", sep = ""))
+   
+  }
+               ##Remove temp files
+                 system(paste("rm ",
+              #contigs
+               "data/alignment_contigs/2024_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/2025_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa ",
+               "data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa ",
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #ctDNA
+               "data/alignment_contigs/ctdna_2024_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa ",
+               #output
+              "data/alignment_contigs/combined_unique_contigs.fa ",
+              #contig
+              "contigs.txt"))
+}
+
+################################################################################################################
+################################################################################################################
+# With CTDNA seperatly without contigs
+for (i in seq_along(unique_contigs)) 
+  {
+
+  hits <- c(mm1s_uniq_2024_blast_100$subject[mm1s_uniq_2024_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_2025_blast_100$subject[mm1s_uniq_2025_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_39652_blast_100$subject[mm1s_uniq_39652_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_910_blast_100$subject[mm1s_uniq_910_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_772_blast_100$subject[mm1s_uniq_772_blast_100$query %in% unique_contigs[i]])
+  hits <- paste(">", hits, sep = "")
+  
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  #######################################
+  #######################################
+  #define insertion
+  ind_ins <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs[i]),]
+  ind_ins <- unique(ind_ins$query)
+  insertion <- mm1s_match_vcf$ALT[which(mm1s_match_vcf$ID %in% ind_ins)]
+  #insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+  
+  ## Add full contig
+  system(paste("grep -w -A 1 ", unique_contigs[i], " data/fasta/772_assembly_full-6_named.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa")
+
+
+  
+   # Add ct DNA contigs
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_2024_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_2024_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_2024_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+                 unique_contigs[i], 
+                 " data/ctDNA_consensus/contigs_2025_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_2025_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_2025_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i],
+               " data/ctDNA_consensus/contigs_39652_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_39652_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_39652_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_772_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_772_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_772_uniq_contigs_temp.fa")
+  
+  system(paste("grep -A 1 ", 
+               unique_contigs[i], 
+               " data/ctDNA_consensus/contigs_910_filtered_consensus_renamed.fasta > ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa > data/alignment_contigs/ctdna_910_uniq_contigs.fa")
+  system("rm data/alignment_contigs/ctdna_910_uniq_contigs_temp.fa")
+  
+  ### add repeats
+  contig <- paste(i, unique_contigs[i], sep = "_")
+  
+  system(paste("grep ", contig, 
+               " data/alignment_contigs/mm1s_uniq_contigs_repeat_mask/mm1s_ctdna_uniq_contigs_consensus.fa.out ",
+               "| awk '{print $10}' > result/mm1s_uniq_contigs_repeat_mask_sequences/", 
+               contig,"_ids.txt", sep = ""))
+  contig_list <- read.table(file = paste("result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_ids.txt", sep = ""))
+  contig_list <- as.character(unique(contig_list$V1))
+  
+  for (j in seq_along(contig_list)) 
+    {
+      system(paste("grep -A1 ",
+                   contig_list[j],
+                   " result/mm1s_uniq_contigs_repeat_mask_sequences/RepeatMasker.fa > ",
+                   "result/mm1s_uniq_contigs_repeat_mask_sequences/", contig,"_",contig_list[j], "_repeats.fa", sep = "" ))
+      system(paste("awk '!/^(--)/' ",
+                   "result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_",contig_list[j], "_repeats.fa > ",
+                   "result/mm1s_uniq_contigs_repeat_mask_sequences/", contig,"_",contig_list[j], "_repeats_final.fa", sep = ""))
+      system(paste(" rm result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_",contig_list[j], "_repeats.fa", sep = "" ))
+      
+          # combine
+      system(paste("cat ",
+               #insertion
+               "data/alignment_contigs/insertion.fa ",
+               #ctDNA
+               "data/alignment_contigs/ctdna_2024_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs.fa ",
+               #funn 772 contig
+               "data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa ",
+               #repeat
+               "result/mm1s_uniq_contigs_repeat_mask_sequences/",contig,"_",contig_list[j], "_repeats_final.fa ",
+               #output
+               "> data/alignment_contigs/combined_unique_contigs.fa",sep = ""))
+  
+               print(paste("Alignment", i))
+                 # Alignment with mafft
+               system(paste("mafft-linsi --thread 25  --adjustdirection ",
+                             "data/alignment_contigs/combined_unique_contigs.fa > ",
+                             "data/alignment_contigs/alignment_with_repeats_ctdna_sep_without_contigs/contige_",i, "_",unique_contigs[i],"_",contig_list[j],  "_ins_with_repeats_contigs.fa", sep = ""))
+   
+  }
+               ##Remove temp files
+                 system(paste("rm ",
+               #ctDNA
+               "data/alignment_contigs/ctdna_2024_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_2025_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_39652_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_772_uniq_contigs.fa ",
+               "data/alignment_contigs/ctdna_910_uniq_contigs.fa ",
+               #insertion
+               "data/alignment_contigs/insertion.fa ",
+               #output
+              "data/alignment_contigs/combined_unique_contigs.fa ",
+              #contig
+              "contigs.txt"))
+}
+```
+
+
+##################################################################################
+## MIA unique contigs blast
+##################################################################################
+The contigs from MIA_match_unique_contigs_P201812_2_assembly.fa  are blast on MIA ct DNA contigs (scr/blast_ctdna_mia.sh code)
+P20181-2
+P201810-2
+P201812-2
+P201813-2
+P201814-2
+P201818-2
+P201823-2
+P20183-2
+P20187-2
+P20189-2
+From the blast results select only queries, 1 comlumn to reduse the size
+
+```{r select_queries}
+mia_samples <- c("P20181-2","P201810-2","P201812-2","P201813-2","P201814-2","P201818-2","P201823-2","P20183-2","P20187-2","P20189-2")
+
+for (i in mia_samples) 
+{
+  print(i)
+  system(paste(" awk '{if($4 > 650 && $3 > 90) {print $1, $2}}'  ",
+               "result/assembly_blast/MIA_matchet_assembly_blast_",i, ".txt > " ,
+               "result/assembly_blast/MIA_matchet_assembly_blast_",i, "_query.txt", sep = ""))
+}
+```
+Read files
+
+```{r uniq_contigs_mia_prep}
+
+mia_uniq_P20181_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20181-2_query.txt")
+colnames(mia_uniq_P20181_blast) <- c("query", "subject")
+mia_uniq_P201810_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201810-2_query.txt")
+colnames(mia_uniq_P201810_blast) <- c("query", "subject")
+mia_uniq_P201812_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201812-2_query.txt")
+colnames(mia_uniq_P201812_blast) <- c("query", "subject")
+mia_uniq_P201813_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201813-2_query.txt")
+colnames(mia_uniq_P201813_blast) <- c("query", "subject")
+mia_uniq_P201814_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201814-2_query.txt")
+colnames(mia_uniq_P201814_blast) <- c("query", "subject")
+mia_uniq_P201818_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201818-2_query.txt")
+colnames(mia_uniq_P201818_blast) <- c("query", "subject")
+mia_uniq_P201823_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201823-2_query.txt")
+colnames(mia_uniq_P201823_blast) <- c("query", "subject")
+mia_uniq_P20183_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20183-2_query.txt")
+colnames(mia_uniq_P20183_blast) <- c("query", "subject")
+mia_uniq_P20187_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20187-2_query.txt")
+colnames(mia_uniq_P20187_blast) <- c("query", "subject")
+mia_uniq_P20189_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20189-2_query.txt")
+colnames(mia_uniq_P20189_blast) <- c("query", "subject")
+
+
+#Read vcf files and mm1s_match_mm1s_mismatch_uniq
+mia_match_vcf <- read.table("data/vcf/MIA_matched_with_ref.vcf", as.is = T)
+colnames(mia_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+mia_match_mia_mismatch_uniq <- read.table("result/assembly_blast/MIA_match_unique_contigs_blast_result.txt")
+```
+Define unique contigs
+
+[1] "P20181-2"
+[1] "P201810-2"
+[1] "P201812-2"
+[1] "P201813-2"
+[1] "P201814-2"
+[1] "P201818-2"
+[1] "P201823-2"
+[1] "P20183-2"
+[1] "P20187-2"
+[1] "P20189-2"
+
+```{r uniq_contigs_mia_prep}
+
+unique_contigs_mia <- list("P20181" = as.character(mia_uniq_P20181_blast$query), 
+                       "P201810" =as.character(mia_uniq_P201810_blast$query), 
+                       "P201812" = as.character(mia_uniq_P201812_blast$query), 
+                       "P201813" = as.character(mia_uniq_P201813_blast$query), 
+                       "P201814" = as.character(mia_uniq_P201814_blast$query), 
+                       "P201818" = as.character(mia_uniq_P201818_blast$query), 
+                       "P201823" =as.character(mia_uniq_P201823_blast$query), 
+                       "P20183" = as.character(mia_uniq_P20183_blast$query), 
+                       "P20187" = as.character(mia_uniq_P20187_blast$query), 
+                       "P20189" = as.character(mia_uniq_P20189_blast$query))
+
+unique_contigs_mia <- Reduce(intersect, unique_contigs_mia, accumulate = F)
+
+mia_match_mia_mismatch_uniq <- mia_match_mia_mismatch_uniq[which(mia_match_mia_mismatch_uniq$X._identity >= 90),]
+mia_match_mia_mismatch_uniq <- mia_match_mia_mismatch_uniq[which(mia_match_mia_mismatch_uniq$subject %in% unique_contigs_mia),]
+
+unique_contigs_mia <- unique_contigs_mia[which(unique_contigs_mia %in% mia_match_mia_mismatch_uniq$subject)]
+
+
+```
+
+
+for each contigue perform multiple alignmentn beetween all ctDNA samples full P201812 sample and  insertions
+
+```{r contig_alignment_insertion_mia}
+#system("mkdir data/alignment_contigs/mia_aligned_unique_contigs_adjustdir_insertion")
+#####################################################################################################
+# Alignment with only part of the insertion which align to P201812 sample
+for (i in seq_along(unique_contigs_mia)) 
+  {
+  hits <- c(mia_uniq_P20181_blast$subject[mia_uniq_P20181_blast$query %in% unique_contigs_mia[i]],
+            mia_uniq_P201810_blast$subject[mia_uniq_P201810_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201812_blast$subject[mia_uniq_P201812_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201813_blast$subject[mia_uniq_P201813_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201814_blast$subject[mia_uniq_P201814_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201818_blast$subject[mia_uniq_P201818_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201823_blast$subject[mia_uniq_P201823_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P20183_blast$subject[mia_uniq_P20183_blast$query %in% unique_contigs_mia[i]],
+            mia_uniq_P20187_blast$subject[mia_uniq_P20187_blast$query %in% unique_contigs_mia[i]],
+            mia_uniq_P20189_blast$subject[mia_uniq_P20189_blast$query %in% unique_contigs_mia[i]])
+  
+  hits <- paste(">", hits, sep = "")
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  
+  #define insertion
+  ind_ins <- mia_match_mia_mismatch_uniq[which(mia_match_mia_mismatch_uniq$subject %in% unique_contigs_mia[i]),]
+  
+  insertion <- mia_match_vcf$ALT[which(mia_match_vcf$ID %in% ind_ins$query)]
+  #insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins$query, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+  print(paste("fasta preparation", i))
+  #add contigs
+  for (j in mia_samples) 
+    {
+    
+    #Add contigs
+    system(paste("grep -w -A 1 -f ",
+                 "data/alignment_contigs/contigs.txt ",
+                 "data/fasta/", j, "_assembly-6_named.fa > ",
+                 "data/alignment_contigs/", j,"_assembly-6_uniq_contigs_temp.fa", sep = ""))
+    system(paste("awk '!/^(--)/' ",
+                "data/alignment_contigs/", j,"_assembly-6_uniq_contigs_temp.fa > ",
+                 "data/alignment_contigs/", j, "_assembly-6_uniq_contigs.fa", sep = ""))
+    system(paste("rm ",
+                 "data/alignment_contigs/", j,"_assembly-6_uniq_contigs_temp.fa", sep = ""))
+  }
+  
+    ## Add full contig
+    system(paste("grep -w -A 1 ", 
+               unique_contigs_mia[i], 
+               " data/fasta/P201812-2_assembly_full-6_named.fa > ",
+               "data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+    system(paste("awk '!/^(--)/' ",
+                 "data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs_temp.fa > ",
+                 "data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs.fa", sep = ""))
+    system("rm data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs_temp.fa")
+    
+    #combine all contigs
+    contig_names <- paste("data/alignment_contigs/", mia_samples, "_assembly-6_uniq_contigs.fa", sep = "")
+    contig_names <- paste(contig_names, collapse = " ")
+    
+    system(paste("cat ",
+                 contig_names,
+                 #add full contig
+                 " data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs.fa ",
+                 #add insertion
+                 "data/alignment_contigs/insertion.fa > ",
+                 "data/alignment_contigs/combined_unique_contigs.fa", sep = ""))
+  
+  print(paste("Alignment", i))
+  # Alignment with mafft
+  system(paste("mafft-linsi --thread 25 --reorder --adjustdirection ",
+               "data/alignment_contigs/combined_unique_contigs.fa > ",
+               "data/alignment_contigs/mia_aligned_unique_contigs_adjustdir_insertion/contige_mia_",i, "_",unique_contigs_mia[i],  "_ins_mafft_aln.fa", sep = ""))
+      system(paste("rm ",
+                 contig_names,
+                 #add full contig
+                 " data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs.fa ",
+                 #add insertion
+                 "data/alignment_contigs/insertion.fa ",
+                 "data/alignment_contigs/combined_unique_contigs.fa", sep = ""))
+  
+
+
+}
+
+```
+
+### rename ctDNA fasta consensus 
+add sample in in the fasta header
+
+```{r rename_fasta}
+for (i in mia_samples)
+{
+  system(paste("awk '{if($1 ~ \">\") ",
+               "{split(FILENAME, splitted, \"_\"); ",
+               "print $1\"_ctDNA_\"splitted[3]} ",
+               "else {print $0}}' ",
+               "data/ctDNA_consensus/contigs_", i, "_filtered_consensus.fasta > ",
+               "data/ctDNA_consensus/contigs_", i, "_filtered_consensus_renamed.fasta", sep = ""))
+
+}
+
+```
+
+
+## Functional annotation 
+
+From "ucsc" downoad bed file of hg38 transcript information. Define the intersect regions for mm1s_match_mm1s_mismatch_uniq and mia_match_mia_mismatch_uniq
+
+```{r gene_information}
+#mm1s 
+mm1s_match_vcf <- read.table("data/vcf/MM1S_matchet_with_ref.vcf", as.is = T)
+colnames(mm1s_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+mm1s_match_vcf <- mm1s_match_vcf[which(mm1s_match_vcf$ID %in% mm1s_match_mm1s_mismatch_uniq$query),]
+
+mm1s_match_bed <- data.frame(chr = mm1s_match_vcf$CHROM,
+                             start = mm1s_match_vcf$POS,
+                             end = mm1s_match_vcf$POS,
+                             id = mm1s_match_vcf$ID)
+write.table(mm1s_match_bed, "data/MM1S_matched_minus_MM1S_cell_MM1S_mismatched.bed", sep = "\t",quote = F, col.names = F, row.names = F)
+system("bedtools intersect -a data/hg48_genes.bed -b data/MM1S_matched_minus_MM1S_cell_MM1S_mismatched.bed > data/MM1S_matchet_minus_MM1S_cell_MM1S_mismatched_genes.bed")
+
+#mia
+mia_match_vcf <- read.table("data/MIA_matched_with_ref.vcf", as.is = T)
+colnames(mia_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+mia_match_vcf <- mia_match_vcf[which(mia_match_vcf$ID %in% mia_match_mia_mismatch_uniq$query),]
+
+mia_match_bed <- data.frame(chr = mia_match_vcf$CHROM,
+                             start = mia_match_vcf$POS,
+                             end = mia_match_vcf$POS,
+                             id = mia_match_vcf$ID)
+write.table(mia_match_bed, "data/MIA_matched_minus_MIA_cell_MIA_mismatched.bed", sep = "\t",quote = F, col.names = F, row.names = F)
+system("bedtools intersect -a data/hg48_genes.bed -b data/MIA_matched_minus_MIA_cell_MIA_mismatched.bed > data/MIA_matchet_minus_MIA_cell_MIA_mismatched_genes.bed")
+
+```
+
+##Compare 777 full and low hist
+MM1S_matchet_with_ref_insertions.fa is blast on 777 low coverage
+Compare low and full coverage insertion from blast
+
+```{r low_fill_coverage}
+mm1s_match_full_cov <- read.table("result/assembly_blast/MM1S_matchet_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_match_low_cov <- read.table("result/assembly_blast/MM1S_matchet_assembly_low_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+
+
+colnames(mm1s_match_full_cov) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_match_low_cov) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+
+#calc number of hits
+print(paste("mm1s_match_full_cov # hits = ", length(mm1s_match_full_cov$query)))
+print(paste("mm1s_match_low_cov # hits = ", length(mm1s_match_low_cov$query)))
+
+#calc number of uniquw insertions
+print(paste("mm1s_match_full_cov # unique ins = ", length(unique(mm1s_match_full_cov$query))))
+print(paste("mm1s_match_low_cov # unique ins = ", length(unique(mm1s_match_low_cov$query))))
+
+#calc number of unique contigs (hits)
+print(paste("mm1s_match_full_cov # unique contigs (hits) = ", length(unique(mm1s_match_full_cov$subject))))
+print(paste("mm1s_match_low_cov # unique contigs (hits) = ", length(unique(mm1s_match_low_cov$subject))))
+
+# calc number of overlap insertions
+print(paste("# overlap ins between full&low coverage = ", length(intersect(mm1s_match_full_cov$query, mm1s_match_low_cov$query))))
+print(paste("# unique overlap ins between full&low coverage = ", length(unique(intersect(mm1s_match_full_cov$query, mm1s_match_low_cov$query)))))
+
+
+overlap_mm1s_match_full <- mm1s_match_full_cov[which(mm1s_match_full_cov$query %in% intersect(mm1s_match_full_cov$query, mm1s_match_low_cov$query)),]
+overlap_mm1s_match_low <- mm1s_match_low_cov[which(mm1s_match_low_cov$query %in% intersect(mm1s_match_low_cov$query, mm1s_match_low_cov$query)),]
+
+summary(overlap_mm1s_match_full$alignment_length)
+summary(overlap_mm1s_match_low$alignment_length)
+```
+
+
+
+
+

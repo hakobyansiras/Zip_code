@@ -1,0 +1,20 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+7_P201812-2_4208360_AluY 303 C T C - 6 - reverse complement
+7_P201812-2_4208360_AluY 302 C T C - 8 - reverse complement
+7_P201812-2_4208360_AluY 300 G T G - 5 - reverse complement
+7_P201812-2_4208360_AluY 299 A T A - 8 - reverse complement
+7_P201812-2_4208360_AluY 298 A T A - 9 - reverse complement
+7_P201812-2_4208360_AluY 297 A T A - 8 - reverse complement
+7_P201812-2_4208360_AluY 296 C T C - 8 - reverse complement
+7_P201812-2_4208360_AluY 269 T C T - 46 - reverse complement
+7_P201812-2_4208360_AluY 260 A G A - 65 - reverse complement
+7_P201812-2_4208360_AluY 218 C G C - 79 - reverse complement
+7_P201812-2_4208360_AluY 199 A C A - 86 - reverse complement
+7_P201812-2_4208360_AluY 153 T C T - 35 - reverse complement
+7_P201812-2_4208360_AluY 152 G C G - 45 - reverse complement
+7_P201812-2_4208360_AluY 151 T C T - 45 - reverse complement
+7_P201812-2_4208360_AluY 143 T C T - 37 - reverse complement
+7_P201812-2_4208360_AluY 139 T C T - 34 - reverse complement
+7_P201812-2_4208360_AluY 4 A G A - 25 - reverse complement
+7_P201812-2_4208360_AluY 2 T C T - 5 - reverse complement
+7_P201812-2_4208360_AluY 1 T C T - 5 - reverse complement

@@ -1,0 +1,17 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+10_772_1086777_MER11C 1065 A g A - 104 - reverse complement
+10_772_1086777_MER11C 1064 A g A - 105 - reverse complement
+10_772_1086777_MER11C 1062 T a T - 107 - reverse complement
+10_772_1086777_MER11C 1061 T c T - 108 - reverse complement
+10_772_1086777_MER11C 1059 A t A - 109 - reverse complement
+10_772_1086777_MER11C 1058 C g C - 111 - reverse complement
+10_772_1086777_MER11C 1008 T c T - 134 - reverse complement
+10_772_1086777_MER11C 685 G t G - 137 - reverse complement
+10_772_1086777_MER11C 684 A g A - 139 - reverse complement
+10_772_1086777_MER11C 683 G a G - 137 - reverse complement
+10_772_1086777_MER11C 682 A g A - 127 - reverse complement
+10_772_1086777_MER11C 681 G a G - 123 - reverse complement
+10_772_1086777_MER11C 680 A g A - 120 - reverse complement
+10_772_1086777_MER11C 593 T c T - 140 - reverse complement
+10_772_1086777_MER11C 587 T c T C 30 107 reverse complement
+10_772_1086777_MER11C 580 A g A G 41 98 reverse complement

@@ -1,0 +1,6 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+17_772_9022223_AluY 290 G A G A 4 55 direct
+17_772_9022223_AluY 294 C A C T 10 26 direct
+17_772_9022223_AluY 299 T A T - 35 - direct
+17_772_9022223_AluY 304 T A T - 34 - direct
+17_772_9022223_AluY 309 T A T - 39 - direct

@@ -1,0 +1,15 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+1_P201812-2_224516_AluJb 5 A g A - 20 - direct
+1_P201812-2_224516_AluJb 9 A g A - 17 - direct
+1_P201812-2_224516_AluJb 63 A g A - 94 - direct
+1_P201812-2_224516_AluJb 70 G c G - 93 - direct
+1_P201812-2_224516_AluJb 71 T c T - 85 - direct
+1_P201812-2_224516_AluJb 94 C g C - 67 - direct
+1_P201812-2_224516_AluJb 103 T c T - 62 - direct
+1_P201812-2_224516_AluJb 120 T a T - 99 - direct
+1_P201812-2_224516_AluJb 153 G c G - 59 - direct
+1_P201812-2_224516_AluJb 189 A g A - 137 - direct
+1_P201812-2_224516_AluJb 194 A g A G 87 99 direct
+1_P201812-2_224516_AluJb 197 G c G - 41 - direct
+1_P201812-2_224516_AluJb 200 G t G T,C 31 129,25 direct
+1_P201812-2_224516_AluJb 204 A g A G 74 118 direct

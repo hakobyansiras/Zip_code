@@ -1,0 +1,7 @@
+ransposone_ID	mutaion_position	nucleotide_in_contig	nucleotide_in_reference
+6_772_746702_AluY	196	T	G
+6_772_746702_AluY	199	A	G
+6_772_746702_AluY	206	T	C
+6_772_746702_AluY	269	A	G
+6_772_746702_AluY	286	G	A
+6_772_746702_AluY	302	G	A

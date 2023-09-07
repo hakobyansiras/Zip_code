@@ -1,0 +1,181 @@
+---
+title: "MIA MSA"
+output: html_document
+date: "2023-07-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## MIA unique contigs blast
+
+P20181-2
+P201810-2
+P201812-2
+P201813-2
+P201814-2
+P201818-2
+P201823-2
+P20183-2
+P20187-2
+P20189-2
+
+From the blast results select only queries, 1 comlumn to reduse the size
+
+```{r select_queries}
+mia_samples <- c("P20181-2","P201810-2","P201812-2","P201813-2","P201814-2","P201818-2","P201823-2","P20183-2","P20187-2","P20189-2")
+
+for (i in mia_samples) 
+{
+  print(i)
+  system(paste(" awk '{if($4 > 650 && $3 > 90) {print $1, $2}}'  ",
+               "result/assembly_blast/MIA_matchet_assembly_blast_",i, ".txt > " ,
+               "result/assembly_blast/MIA_matchet_assembly_blast_",i, "_query.txt", sep = ""))
+}
+```
+
+Read files
+
+```{r uniq_contigs_mia_prep}
+
+mia_uniq_P20181_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20181-2_query.txt")
+colnames(mia_uniq_P20181_blast) <- c("query", "subject")
+mia_uniq_P201810_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201810-2_query.txt")
+colnames(mia_uniq_P201810_blast) <- c("query", "subject")
+mia_uniq_P201812_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201812-2_query.txt")
+colnames(mia_uniq_P201812_blast) <- c("query", "subject")
+mia_uniq_P201813_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201813-2_query.txt")
+colnames(mia_uniq_P201813_blast) <- c("query", "subject")
+mia_uniq_P201814_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201814-2_query.txt")
+colnames(mia_uniq_P201814_blast) <- c("query", "subject")
+mia_uniq_P201818_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201818-2_query.txt")
+colnames(mia_uniq_P201818_blast) <- c("query", "subject")
+mia_uniq_P201823_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P201823-2_query.txt")
+colnames(mia_uniq_P201823_blast) <- c("query", "subject")
+mia_uniq_P20183_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20183-2_query.txt")
+colnames(mia_uniq_P20183_blast) <- c("query", "subject")
+mia_uniq_P20187_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20187-2_query.txt")
+colnames(mia_uniq_P20187_blast) <- c("query", "subject")
+mia_uniq_P20189_blast <- read.table("result/assembly_blast/MIA_matchet_assembly_blast_P20189-2_query.txt")
+colnames(mia_uniq_P20189_blast) <- c("query", "subject")
+
+
+#Read vcf files and mm1s_match_mm1s_mismatch_uniq
+mia_match_vcf <- read.table("data/vcf/MIA_matched_with_ref.vcf", as.is = T)
+colnames(mia_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+mia_match_mia_mismatch_uniq <- read.table("result/assembly_blast/MIA_match_unique_contigs_blast_result.txt")
+```
+Define unique contigs
+
+
+```{r uniq_contigs_mia_prep}
+
+unique_contigs_mia <- list("P20181" = as.character(mia_uniq_P20181_blast$query), 
+                       "P201810" =as.character(mia_uniq_P201810_blast$query), 
+                       "P201812" = as.character(mia_uniq_P201812_blast$query), 
+                       "P201813" = as.character(mia_uniq_P201813_blast$query), 
+                       "P201814" = as.character(mia_uniq_P201814_blast$query), 
+                       "P201818" = as.character(mia_uniq_P201818_blast$query), 
+                       "P201823" =as.character(mia_uniq_P201823_blast$query), 
+                       "P20183" = as.character(mia_uniq_P20183_blast$query), 
+                       "P20187" = as.character(mia_uniq_P20187_blast$query), 
+                       "P20189" = as.character(mia_uniq_P20189_blast$query))
+
+unique_contigs_mia <- Reduce(intersect, unique_contigs_mia, accumulate = F)
+
+mia_match_mia_mismatch_uniq <- mia_match_mia_mismatch_uniq[which(mia_match_mia_mismatch_uniq$X._identity >= 90),]
+mia_match_mia_mismatch_uniq <- mia_match_mia_mismatch_uniq[which(mia_match_mia_mismatch_uniq$subject %in% unique_contigs_mia),]
+
+unique_contigs_mia <- unique_contigs_mia[which(unique_contigs_mia %in% mia_match_mia_mismatch_uniq$subject)]
+
+
+```
+
+##### Alignment
+MSA between all ctDNA samples, full P201812 sample, insertion and transposons (from repeatmasker)
+
+
+```{r contig_alignment_insertion_mia}
+#system("mkdir data/alignment_contigs/mia_aligned_unique_contigs_adjustdir_insertion")
+#####################################################################################################
+# Alignment with only part of the insertion which align to P201812 sample
+for (i in seq_along(unique_contigs_mia)) 
+  {
+  hits <- c(mia_uniq_P20181_blast$subject[mia_uniq_P20181_blast$query %in% unique_contigs_mia[i]],
+            mia_uniq_P201810_blast$subject[mia_uniq_P201810_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201812_blast$subject[mia_uniq_P201812_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201813_blast$subject[mia_uniq_P201813_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201814_blast$subject[mia_uniq_P201814_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201818_blast$subject[mia_uniq_P201818_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P201823_blast$subject[mia_uniq_P201823_blast$query %in% unique_contigs_mia[i]], 
+            mia_uniq_P20183_blast$subject[mia_uniq_P20183_blast$query %in% unique_contigs_mia[i]],
+            mia_uniq_P20187_blast$subject[mia_uniq_P20187_blast$query %in% unique_contigs_mia[i]],
+            mia_uniq_P20189_blast$subject[mia_uniq_P20189_blast$query %in% unique_contigs_mia[i]])
+  
+  hits <- paste(">", hits, sep = "")
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  
+  #define insertion
+  ind_ins <- mia_match_mia_mismatch_uniq[which(mia_match_mia_mismatch_uniq$subject %in% unique_contigs_mia[i]),]
+  
+  insertion <- mia_match_vcf$ALT[which(mia_match_vcf$ID %in% ind_ins$query)]
+  #insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins$query, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+  print(paste("fasta preparation", i))
+  #add contigs
+  for (j in mia_samples) 
+    {
+    
+    #Add contigs
+    system(paste("grep -w -A 1 -f ",
+                 "data/alignment_contigs/contigs.txt ",
+                 "data/fasta/", j, "_assembly-6_named.fa > ",
+                 "data/alignment_contigs/", j,"_assembly-6_uniq_contigs_temp.fa", sep = ""))
+    system(paste("awk '!/^(--)/' ",
+                "data/alignment_contigs/", j,"_assembly-6_uniq_contigs_temp.fa > ",
+                 "data/alignment_contigs/", j, "_assembly-6_uniq_contigs.fa", sep = ""))
+    system(paste("rm ",
+                 "data/alignment_contigs/", j,"_assembly-6_uniq_contigs_temp.fa", sep = ""))
+  }
+  
+    ## Add full contig
+    system(paste("grep -w -A 1 ", 
+               unique_contigs_mia[i], 
+               " data/fasta/P201812-2_assembly_full-6_named.fa > ",
+               "data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+    system(paste("awk '!/^(--)/' ",
+                 "data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs_temp.fa > ",
+                 "data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs.fa", sep = ""))
+    system("rm data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs_temp.fa")
+    
+    #combine all contigs
+    contig_names <- paste("data/alignment_contigs/", mia_samples, "_assembly-6_uniq_contigs.fa", sep = "")
+    contig_names <- paste(contig_names, collapse = " ")
+    
+    system(paste("cat ",
+                 contig_names,
+                 #add full contig
+                 " data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs.fa ",
+                 #add insertion
+                 "data/alignment_contigs/insertion.fa > ",
+                 "data/alignment_contigs/combined_unique_contigs.fa", 
+                 "data/alignment_contigs/repeatmasker.fa",sep = ""))
+  
+  print(paste("Alignment", i))
+  # Alignment with mafft
+  system(paste("mafft-linsi --thread 25 --reorder --adjustdirection ",
+               "data/alignment_contigs/combined_unique_contigs.fa > ",
+               "data/alignment_contigs/mia_aligned_unique_contigs_adjustdir_insertion/contige_mia_",i, "_",unique_contigs_mia[i],  "_ins_mafft_aln.fa", sep = ""))
+      system(paste("rm ",
+                 contig_names,
+                 #add full contig
+                 " data/alignment_contigs/P201812-2_assembly_full-6_named_uniq_contigs.fa ",
+                 #add insertion
+                 "data/alignment_contigs/insertion.fa ",
+                 "data/alignment_contigs/combined_unique_contigs.fa", sep = ""))
+  
+}
+
+```

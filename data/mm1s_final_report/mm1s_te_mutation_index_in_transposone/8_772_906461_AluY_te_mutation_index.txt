@@ -1,0 +1,12 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+8_772_906461_AluY 1 T G T A,G 30 37,44 direct
+8_772_906461_AluY 4 T C T C 77 55 direct
+8_772_906461_AluY 9 A G A G 86 50 direct
+8_772_906461_AluY 10 T C T C 96 42 direct
+8_772_906461_AluY 277 T G T A,G 11 103,81 direct
+8_772_906461_AluY 278 C T C T 64 131 direct
+8_772_906461_AluY 279 T C T C,G 12 174,10 direct
+8_772_906461_AluY 305 G A G - 8 - direct
+8_772_906461_AluY 307 C A C - 2 - direct
+8_772_906461_AluY 308 T A - - - - direct
+8_772_906461_AluY 309 C A - - - - direct

@@ -1,0 +1,188 @@
+---
+title: "Define specific insertions"
+output: html_document
+date: "2023-07-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Read blast results
+
+```{r read_blast}
+#read blast output
+mm1s_match <- read.table("result/assembly_blast/MM1S_matchet_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mia_match <- read.table("result/assembly_blast/MIA_matched_P201812-2_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_mismatch <- read.table("result/assembly_blast/MM1S_mismatch_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mia_mismatch <- read.table("result/assembly_blast/MIA_mismatch_P201812-2_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_cell_line <- read.table("result/assembly_blast/MM1S_cell_line_assembly_777_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mia_cell_line <- read.table("result/assembly_blast/MIA_cell_line_P201812-2_blast.txt",colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+
+#define column name
+colnames(mm1s_match) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mia_match) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_cell_line) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                         "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mia_cell_line) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                         "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_mismatch) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                             "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mia_mismatch) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                             "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+```
+
+Statistics for insertion
+
+```{r blast}
+
+# define number of insertions
+####
+paste("# inst mm1s_match = ", length(mm1s_match$query))
+paste("# unique inst mm1s_match = ", length(unique(mm1s_match$query)))
+paste("# inst mm1s_mismatch = ", length(mm1s_mismatch$query))
+paste("# unique inst mm1s_mismatch = ", length(unique(mm1s_mismatch$query)))
+paste("# inst mm1s_cell_line = ", length(mm1s_cell_line$query))
+paste("# unique inst mm1s_cell_line = ", length(unique(mm1s_cell_line$query)))
+paste("# inst mia_match = ", length(mia_match$query))
+paste("# unique inst mia_match = ", length(unique(mia_match$query)))
+paste("# inst mia_mismatch = ", length(mia_mismatch$query))
+paste("# unique inst mia_mismatch = ", length(unique(mia_mismatch$query)))
+paste("# inst mia_cell_line = ", length(mia_cell_line$query))
+paste("# unique inst mia_cell_line = ", length(unique(mia_cell_line$query)))
+
+# visualization
+combined_aln_length <- data.frame(alignment_length = NA,
+                                  group = NA)
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mm1s_match$alignment_length,
+                                                             group = "mm1s_match"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mm1s_cell_line$alignment_length,
+                                                             group = "mm1s_cell_line"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mia_match$alignment_length,
+                                                             group = "mia_match"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mia_cell_line$alignment_length,
+                                                             group = "mia_cell_line"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mm1s_mismatch$alignment_length,
+                                                             group = "mm1s_mismatch"))
+combined_aln_length <- rbind(combined_aln_length, data.frame(alignment_length =mia_mismatch$alignment_length,
+                                                             group = "mia_mismatch"))
+combined_aln_length <- na.omit(combined_aln_length)
+
+boxplot(combined_aln_length$alignment_length ~ combined_aln_length$group, main = "Alignment length",
+        xlab = "group", ylab = "Alignment length")
+```
+
+Define unique hits for each sample, compared with cell lines.
+Unique hits of mm1s_match compared with mm1s_cell_line \ 
+Unique hits of mia_match compared with mia_cell_line \ 
+Unique hits of mm1s_mismatch_uniq compared with mm1s_cell_line \ 
+Unique hits of mia_mismatch_uniq compared with  mia_cell_line \ 
+ 
+
+```{r blast_uniq_hits}
+## define unique hits for mm1s_match compared with mm1s cell line
+
+mm1s_match_uniq <- mm1s_match[-which(mm1s_match$subject %in% intersect(mm1s_match$subject, mm1s_cell_line$subject)),]
+hist(mm1s_match_uniq$alignment_length, main = "mm1s_match unique hits", xlab = "Alignment length")
+
+## define unique hits for mm1s_match compared with mia cell line
+mia_match_uniq <- mia_match[-which(mia_match$subject %in% intersect(mia_match$subject, mia_cell_line$subject)),]
+hist(mia_match_uniq$alignment_length, main = "mia_match unique hits", xlab = "Alignment length")
+
+## define unique hits for mm1s_mismatch compared with  mm1s cell line
+
+mm1s_mismatch_uniq <- mm1s_mismatch[-which(mm1s_mismatch$subject %in% intersect(mm1s_mismatch$subject, mm1s_cell_line$subject)),]
+hist(mm1s_mismatch_uniq$alignment_length, main = "mm1s_mismatch unique hits", xlab = "Alignment length")
+
+## define unique hits for mia_mismatch compared with  mia cell line
+mia_mismatch_uniq <- mia_mismatch[-which(mia_mismatch$subject %in% intersect(mia_mismatch$subject, mia_cell_line$subject)),]
+hist(mia_mismatch_uniq$alignment_length, main = "mia_mismatch unique hits", xlab = "Alignment length")
+```
+Define statistics for unique samples
+
+```{r unique_sample_stat}
+##### define number of hits
+#match
+# paste("# hits mm1s_match = ", length(mm1s_match_uniq$subject))
+paste("# unique hits mm1s_match = ", length(unique(mm1s_match_uniq$subject)))
+mm1s_match_aln_length_stat <- as.matrix(summary(mm1s_match_uniq$alignment_length))
+colnames(mm1s_match_aln_length_stat) <- "mm1s_match_uniq"
+mm1s_match_aln_length_stat
+
+
+paste("# hits mia_match = ", length(mia_match_uniq$subject))
+paste("# unique hits mia_match = ", length(unique(mia_match_uniq$subject)))
+mia_match_aln_length_stat <- as.matrix(summary(mia_match_uniq$alignment_length))
+colnames(mia_match_aln_length_stat) <- "mia_match_uniq"
+mia_match_aln_length_stat
+
+#mismatch
+paste("# hits mm1s_mismatch = ", length(mm1s_mismatch_uniq$subject))
+paste("# unique hits mm1s_mismatch = ", length(unique(mm1s_mismatch_uniq$subject)))
+mm1s_mismatch_aln_length_stat <- as.matrix(summary(mm1s_mismatch_uniq$alignment_length))
+colnames(mm1s_mismatch_aln_length_stat) <- "mm1s_mismatch_uniq"
+mm1s_mismatch_aln_length_stat
+
+paste("# hits mia_mismatch = ", length(mia_mismatch_uniq$subject))
+paste("# unique hits mia_mismatch = ", length(unique(mia_mismatch_uniq$subject)))
+mia_mismatch_aln_length_stat <- as.matrix(summary(mia_mismatch_uniq$alignment_length))
+colnames(mia_mismatch_aln_length_stat) <- "mia_mismatch_uniq"
+mia_mismatch_aln_length_stat
+
+rm(mm1s_match_aln_length_stat, mia_match_aln_length_stat, mm1s_mismatch_aln_length_stat, mia_mismatch_aln_length_stat)
+
+```
+
+
+Define unique hits for match samples, compared with mistatched and cell lines
+
+```{r blast_uniq_hits_1}
+## compare unique mm1S match with mm1s mismatch, define mm1S match unique
+mm1s_match_mm1s_mismatch_uniq <- mm1s_match_uniq[-which(mm1s_match_uniq$subject %in% intersect(mm1s_match_uniq$subject, mm1s_mismatch$subject)),]
+
+## compare unique mia match with mia mismatch, define mia match unique
+mia_match_mia_mismatch_uniq <- mia_match_uniq[-which(mia_match_uniq$subject %in% intersect(mia_match_uniq$subject, mia_mismatch$subject)),]
+
+print("MM1S")
+# number of hits mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits = ", length(mm1s_match_mm1s_mismatch_uniq$subject))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits = ",length(unique(mm1s_match_mm1s_mismatch_uniq$subject)))
+# number of hits > 80% intensity mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits (>80) = ", length(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 80 ]))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits (>80) = ", length(unique(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 80 ])))
+# number of hits > 90% intensity mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits (>90) = ", length(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 90 ]))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits (>90) = ", length(unique(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` > 90 ])))
+# number of hits == 100% intensity mm1s
+paste("mm1s_match_mm1s_mismatch_uniq # hits (100%) = ", length(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity`  == 100 ]))
+paste("mm1s_match_mm1s_mismatch_uniq # unique hits (100%) = ", length(unique(mm1s_match_mm1s_mismatch_uniq$subject[mm1s_match_mm1s_mismatch_uniq$`%_identity` == 100])))
+
+print("MIA")
+# number of hits mia
+paste("mia_match_mia_mismatch_uniq # hits = ", length(mia_match_mia_mismatch_uniq$subject))
+paste("mia_match_mia_mismatch_uniq # unique hits = ",length(unique(mia_match_mia_mismatch_uniq$subject)))
+# number of hits > 80% intensity mia
+paste("mia_match_mia_mismatch_uniq # hits (>80) = ", length(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 80 ]))
+paste("mia_match_mia_mismatch_uniq # unique hits (>80) = ", length(unique(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 80 ])))
+# number of hits > 90% intensity mia
+paste("mia_match_mia_mismatch_uniq # hits (>90) = ", length(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 90 ]))
+paste("mia_match_mia_mismatch_uniq # unique hits (>90) = ", length(unique(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` > 90 ])))
+# number of hits == 100% intensity mia
+paste("mia_match_mia_mismatch_uniq # hits (100%) = ", length(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` == 100 ]))
+paste("mia_match_mia_mismatch_uniq # unique hits (100%) = ", length(unique(mia_match_mia_mismatch_uniq$subject[mia_match_mia_mismatch_uniq$`%_identity` == 100])))
+
+```
+
+Save unique hits and insertions
+
+```{r save_uniq}
+# MM1S
+write.table(paste(">", unique(mm1s_match_mm1s_mismatch_uniq$subject), sep = ""), "result/assembly_blast/MM1S_match_unique_contigs.txt", quote = F, row.names = F,col.names = F, sep = "\t")
+write.table(mm1s_match_mm1s_mismatch_uniq, "result/assembly_blast/MM1S_match_unique_contigs_blast_result.txt")
+
+#MIA
+write.table(paste(">", unique(mia_match_mia_mismatch_uniq$subject), sep = ""), "result/assembly_blast/MIA_match_unique_contigs.txt",quote = F, row.names = F,col.names = F, sep = "\t")
+write.table(mia_match_mia_mismatch_uniq, "result/assembly_blast/MIA_match_unique_contigs_blast_result.txt")
+```

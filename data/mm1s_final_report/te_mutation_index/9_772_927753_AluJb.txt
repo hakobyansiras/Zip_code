@@ -1,0 +1,8 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	9_772_927753_AluJb	222	T	g	T	G	4	203
+2	9_772_927753_AluJb	233	A	t	A	-	165	-
+3	9_772_927753_AluJb	275	T	c	T	C	39	62
+4	9_772_927753_AluJb	296	T	a	T	-	16	-
+5	9_772_927753_AluJb	300	T	a	T	-	14	-
+6	9_772_927753_AluJb	307	T	a	T	-	0	-
+7	9_772_927753_AluJb	313	T	a	T	-	0	-

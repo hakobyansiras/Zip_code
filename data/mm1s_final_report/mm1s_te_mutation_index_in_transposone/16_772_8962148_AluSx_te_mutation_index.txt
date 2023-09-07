@@ -1,0 +1,21 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+16_772_8962148_AluSx 309 C T C - - - reverse complement
+16_772_8962148_AluSx 305 A T A - 3 - reverse complement
+16_772_8962148_AluSx 304 C T C - 4 - reverse complement
+16_772_8962148_AluSx 301 C T C - 5 - reverse complement
+16_772_8962148_AluSx 300 A T A - 7 - reverse complement
+16_772_8962148_AluSx 299 A T A - 6 - reverse complement
+16_772_8962148_AluSx 298 C T C - 9 - reverse complement
+16_772_8962148_AluSx 277 A G A - 22 - reverse complement
+16_772_8962148_AluSx 270 G C G - 24 - reverse complement
+16_772_8962148_AluSx 269 C G C - 38 - reverse complement
+16_772_8962148_AluSx 268 T C T - 40 - reverse complement
+16_772_8962148_AluSx 267 C T C - 37 - reverse complement
+16_772_8962148_AluSx 266 T C T - 38 - reverse complement
+16_772_8962148_AluSx 262 T C T - 38 - reverse complement
+16_772_8962148_AluSx 175 A G A - 257 - reverse complement
+16_772_8962148_AluSx 155 A G A - 278 - reverse complement
+16_772_8962148_AluSx 154 T C T - 315 - reverse complement
+16_772_8962148_AluSx 57 A G A - 206 - reverse complement
+16_772_8962148_AluSx 8 A G A G 29 23 reverse complement
+16_772_8962148_AluSx 4 A G A - 35 - reverse complement

@@ -1,0 +1,6 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+1_P201812-2_224516_AluSx 5 A G A - 31 - direct
+1_P201812-2_224516_AluSx 9 A G A - 82 - direct
+1_P201812-2_224516_AluSx 154 G C G - 147 - direct
+1_P201812-2_224516_AluSx 198 G C G - 158 - direct
+1_P201812-2_224516_AluSx 201 G T T - 176 - direct

@@ -1,0 +1,9 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	9_P201812-2_4580137_AluSx	2843	A	T	A	-	7	-
+2	9_P201812-2_4580137_AluSx	2845	G	T	G	-	5	-
+3	9_P201812-2_4580137_AluSx	2846	A	T	A	-	16	-
+4	9_P201812-2_4580137_AluSx	2847	C	T	C	-	16	-
+5	9_P201812-2_4580137_AluSx	2849	A	T	A	-	62	-
+6	9_P201812-2_4580137_AluSx	2875	T	C	T	-	110	-
+7	9_P201812-2_4580137_AluSx	3157	A	G	A	-	84	-
+8	9_P201812-2_4580137_AluSx	3158	T	C	T	-	62	-

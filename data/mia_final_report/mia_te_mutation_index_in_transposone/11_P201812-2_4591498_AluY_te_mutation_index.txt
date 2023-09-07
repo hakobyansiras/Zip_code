@@ -1,0 +1,4 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+11_P201812-2_4591498_AluY 8 T C T - 10 - direct
+11_P201812-2_4591498_AluY 298 G A G - - - direct
+11_P201812-2_4591498_AluY 299 G A G - 1 - direct

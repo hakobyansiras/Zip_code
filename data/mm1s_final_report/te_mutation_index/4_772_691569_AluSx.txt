@@ -1,0 +1,16 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	4_772_691569_AluSx	1575	T	C	T	C	8	7
+2	4_772_691569_AluSx	1577	A	G	A	-	15	-
+3	4_772_691569_AluSx	1629	T	C	T	-	67	-
+4	4_772_691569_AluSx	1683	T	C	T	-	112	-
+5	4_772_691569_AluSx	1724	A	G	A	-	259	-
+6	4_772_691569_AluSx	1727	T	C	T	C	285	146
+7	4_772_691569_AluSx	1871	G	A	G	A	6	6
+8	4_772_691569_AluSx	1873	T	A	T	-	5	-
+9	4_772_691569_AluSx	1874	C	A	C	-	1	-
+10	4_772_691569_AluSx	1875	C	A	C	-	4	-
+11	4_772_691569_AluSx	1877	G	A	G	-	1	-
+12	4_772_691569_AluSx	1878	T	A	T	-	1	-
+13	4_772_691569_AluSx	1879	G	A	G	-	0	-
+14	4_772_691569_AluSx	1887	T	A	T	-	0	-
+15	4_772_691569_AluSx	1889	G	A	G	-	0	-

@@ -1,0 +1,9 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+2_772_501501_THE1C 64 T c T - 2 - direct
+2_772_501501_THE1C 70 A g A - - - direct
+2_772_501501_THE1C 83 A g A - - - direct
+2_772_501501_THE1C 97 T g T - - - direct
+2_772_501501_THE1C 110 A g A - - - direct
+2_772_501501_THE1C 118 T c T - 10 - direct
+2_772_501501_THE1C 120 C a C - 10 - direct
+2_772_501501_THE1C 125 A g A - - - direct

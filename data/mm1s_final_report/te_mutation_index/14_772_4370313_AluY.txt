@@ -1,0 +1,2 @@
+"ID"	"position"	"nucleotide_in_contig"	"nucleotide_in_repeat"	"te_allele_1"	"te_allele_2"	"te_allele_1_count"	"te_allele_2_count"
+"1"	"14_772_4370313_AluY"	308	"A"	"G"	"A"	"G"	"10"	"24"

@@ -1,0 +1,8 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+9_772_927753_AluJb 222 T g T G 4 203 direct
+9_772_927753_AluJb 233 A t A - 165 - direct
+9_772_927753_AluJb 275 T c T C 39 62 direct
+9_772_927753_AluJb 291 T a T - 16 - direct
+9_772_927753_AluJb 295 T a T - 14 - direct
+9_772_927753_AluJb 302 T a T - - - direct
+9_772_927753_AluJb 308 T a T - - - direct

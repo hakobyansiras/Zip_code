@@ -1,0 +1,16 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+4_772_691569_AluSx 3 T C T C 8 7 direct
+4_772_691569_AluSx 5 A G A - 15 - direct
+4_772_691569_AluSx 57 T C T - 67 - direct
+4_772_691569_AluSx 111 T C T - 112 - direct
+4_772_691569_AluSx 152 A G A - 259 - direct
+4_772_691569_AluSx 155 T C T C 285 146 direct
+4_772_691569_AluSx 299 G A G A 6 6 direct
+4_772_691569_AluSx 301 T A T - 5 - direct
+4_772_691569_AluSx 302 C A C - 1 - direct
+4_772_691569_AluSx 303 C A C - 4 - direct
+4_772_691569_AluSx 305 G A G - 1 - direct
+4_772_691569_AluSx 306 T A T - 1 - direct
+4_772_691569_AluSx 307 G A G - - - direct
+4_772_691569_AluSx 309 T A T - - - direct
+4_772_691569_AluSx 311 G A G - - - direct

@@ -1,0 +1,4 @@
+ransposone_ID	mutaion_position	nucleotide_in_contig	nucleotide_in_reference
+14_772_4370313_AluY	4	T	C
+14_772_4370313_AluY	8	T	C
+14_772_4370313_AluY	53	T	C

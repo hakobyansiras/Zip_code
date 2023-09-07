@@ -1,0 +1,145 @@
+---
+title: "MM1S MSA"
+output: html_document
+date: "2023-07-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## MM1S unique contigs blast
+##################################################################################
+
+MM1S_match_unique_contigs_772_assembly_2024_blast.txt
+MM1S_match_unique_contigs_772_assembly_2025_blast.txt
+MM1S_match_unique_contigs_772_assembly_39652-530_blast.txt
+MM1S_match_unique_contigs_772_assembly_910_blast.txt
+MM1S_match_unique_contigs_772_assembly_low_772_blast.txt
+
+Read data
+
+```{r ctDNA_contigs_blast}
+mm1s_uniq_2024_blast <- read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_2024_blast.txt", 
+                                   colClasses = c(rep("character", times = 2), rep("numeric", times = 10)) )
+mm1s_uniq_2025_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_2025_blast.txt",
+                                    colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_uniq_39652_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_39652-530_blast.txt",
+                                     colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_uniq_910_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_910_blast.txt",
+                                   colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+mm1s_uniq_772_blast <-  read.table("result/assembly_blast/MM1S_match_unique_contigs_772_assembly_low_772_blast.txt",
+                                   colClasses = c(rep("character", times = 2), rep("numeric", times = 10)))
+
+
+colnames(mm1s_uniq_2024_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_2025_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_39652_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_910_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+colnames(mm1s_uniq_772_blast) <- c("query", "subject", "%_identity", "alignment_length", "mismatches", "gap_opens",
+                          "q_start", "q_end", "s_start", "s_end", "evalue", "bit_score")
+
+#Read vcf files and mm1s_match_mm1s_mismatch_uniq
+mm1s_match_vcf <- read.table("data/vcf/MM1S_matchet_with_ref.vcf", as.is = T)
+colnames(mm1s_match_vcf) <- c("CHROM",  "POS",     "ID",      "REF",     "ALT",     "QUAL",    "FILTER",  "INFO",    "FORMAT",   "GENOTYPE")
+mm1s_match_mm1s_mismatch_uniq <- read.table("result/assembly_blast/MM1S_match_unique_contigs_blast_result.txt")
+
+# summary(mm1s_uniq_2024_blast$alignment_length[which(mm1s_uniq_2024_blast$query %in% uniq_ins)])
+# summary(mm1s_uniq_2025_blast$alignment_length[which(mm1s_uniq_2025_blast$query %in% uniq_ins)])
+# summary(mm1s_uniq_39652_blast$alignment_length[which(mm1s_uniq_39652_blast$query %in% uniq_ins)])
+# summary(mm1s_uniq_910_blast$alignment_length[which(mm1s_uniq_910_blast$query %in% uniq_ins)])
+```
+
+Once the unique contigs are determined, for each contig perform multiple alignment beetween all ctDNA samples
+Define contigs which have length > 600bp and uniq between all ctDNA blast hits
+
+```{r contig_unique}
+mm1s_uniq_2024_blast_100 <- mm1s_uniq_2024_blast[mm1s_uniq_2024_blast$alignment_length > 650, ]
+mm1s_uniq_2025_blast_100 <- mm1s_uniq_2025_blast[mm1s_uniq_2025_blast$alignment_length >650, ]
+mm1s_uniq_39652_blast_100 <- mm1s_uniq_39652_blast[mm1s_uniq_39652_blast$alignment_length > 650, ]
+mm1s_uniq_910_blast_100 <- mm1s_uniq_910_blast[mm1s_uniq_910_blast$alignment_length > 650, ]
+mm1s_uniq_772_blast_100 <- mm1s_uniq_772_blast[mm1s_uniq_772_blast$alignment_length > 650, ]
+
+unique_contigs <- list("2024" = mm1s_uniq_2024_blast_100$query, "2025" = mm1s_uniq_2025_blast_100$query,
+            "39652" = mm1s_uniq_39652_blast_100$query, "910" = mm1s_uniq_910_blast_100$query, "772" = mm1s_uniq_772_blast_100$query)
+unique_contigs <- Reduce(intersect, unique_contigs, accumulate = F)
+
+mm1s_match_mm1s_mismatch_uniq <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$X._identity >= 90),]
+mm1s_match_mm1s_mismatch_uniq <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs),]
+
+unique_contigs <- unique_contigs[which(unique_contigs %in% mm1s_match_mm1s_mismatch_uniq$subject)]
+
+## create dirs for alignment
+#system("mkdir data/alignment_contigs")
+```
+
+##### Alignment
+MSA between all ctDNA samples, full 771 sample, insertion and transposons (from repeatmasker)
+
+
+```{r contig_alignment_insertion}
+
+#####################################################################################################
+# Alignment with only part of the insertion which align to the 772 sample
+for (i in seq_along(unique_contigs)) 
+  {
+  hits <- c(mm1s_uniq_2024_blast_100$subject[mm1s_uniq_2024_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_2025_blast_100$subject[mm1s_uniq_2025_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_39652_blast_100$subject[mm1s_uniq_39652_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_910_blast_100$subject[mm1s_uniq_910_blast_100$query %in% unique_contigs[i]],
+            mm1s_uniq_772_blast_100$subject[mm1s_uniq_772_blast_100$query %in% unique_contigs[i]])
+  hits <- paste(">", hits, sep = "")
+  
+  write.table(as.data.frame(hits), "data/alignment_contigs/contigs.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+  
+  #define insertion
+  ind_ins <- mm1s_match_mm1s_mismatch_uniq[which(mm1s_match_mm1s_mismatch_uniq$subject %in% unique_contigs[i]),]
+  
+  insertion <- mm1s_match_vcf$ALT[which(mm1s_match_vcf$ID %in% ind_ins$query)]
+  insertion <- paste0(strsplit(insertion, split = "")[[1]][ind_ins$q_start:ind_ins$q_end], collapse = "")
+  insertion_fasta <- paste(">insertion_", ind_ins$query, "\n", insertion, sep = "")
+  write(insertion_fasta, "data/alignment_contigs/insertion.fa", ncolumns = 1)
+  
+  print(paste("fasta preparation", i))
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/2024_assembly-6_named.fa > data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa > data/alignment_contigs/2024_assembly-6_uniq_contigs.fa")
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/2025_assembly-6_named.fa > data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa > data/alignment_contigs/2025_assembly-6_uniq_contigs.fa")
+  system("rm data/alignment_contigs/2025_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/39652-530_S1_assembly-6_named.fa > data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa > data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa")
+  system("rm data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/910_assembly-6_named.fa > data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa > data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/910_assembly-6_named_uniq_contigs_temp.fa")
+  
+  system("grep -w -A 1 -f data/alignment_contigs/contigs.txt data/fasta/772_assembly-6_named.fa > data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly-6_named_uniq_contigs_temp.fa")
+  
+  ## Add full contig
+  system(paste("grep -w -A 1 ", unique_contigs[i], " data/fasta/772_assembly_full-6_named.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa", sep = ""))
+  system("awk '!/^(--)/' data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa > data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa")
+  system("rm data/alignment_contigs/772_assembly_full-6_named_uniq_contigs_temp.fa")
+
+  
+    # combine all files + transposons
+    system("cat data/alignment_contigs/2024_assembly-6_uniq_contigs.fa data/alignment_contigs/2025_assembly-6_uniq_contigs.fa  data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa  data/alignment_contigs/insertion.fa data/alignment_contigs/repeatmasker.fa > data/alignment_contigs/combined_unique_contigs.fa")
+  
+  print(paste("Alignment", i))
+  # Alignment with mafft
+  system(paste("mafft --thread 25 --reorder --adjustdirection data/alignment_contigs/combined_unique_contigs.fa > data/alignment_contigs/aligned_unique_contigs_adjustdir_insertion_repeatmask/contige_",i, "_",unique_contigs[i],  "_ins_repeats_mafft_aln.fa", sep = ""))
+  
+  system("rm data/alignment_contigs/2024_assembly-6_uniq_contigs.fa data/alignment_contigs/2025_assembly-6_uniq_contigs.fa data/alignment_contigs/39652_530_S1_assembly-6_uniq_contigs.fa data/alignment_contigs/910_assembly-6_named_uniq_contigs.fa data/alignment_contigs/772_assembly-6_named_uniq_contigs.fa data/alignment_contigs/combined_unique_contigs.fa data/alignment_contigs/772_assembly_full-6_named_uniq_contigs.fa data/alignment_contigs/insertion.fa ")
+
+}
+
+```

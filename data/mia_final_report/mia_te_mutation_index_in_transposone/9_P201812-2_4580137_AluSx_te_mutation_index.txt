@@ -1,0 +1,9 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+9_P201812-2_4580137_AluSx 310 A T A - 7 - reverse complement
+9_P201812-2_4580137_AluSx 308 G T G - 5 - reverse complement
+9_P201812-2_4580137_AluSx 307 A T A - 16 - reverse complement
+9_P201812-2_4580137_AluSx 306 C T C - 16 - reverse complement
+9_P201812-2_4580137_AluSx 304 A T A - 62 - reverse complement
+9_P201812-2_4580137_AluSx 278 T C T - 110 - reverse complement
+9_P201812-2_4580137_AluSx 10 A G A - 84 - reverse complement
+9_P201812-2_4580137_AluSx 9 T C T - 62 - reverse complement

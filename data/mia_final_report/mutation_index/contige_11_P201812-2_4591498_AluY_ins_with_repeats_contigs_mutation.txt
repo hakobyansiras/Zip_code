@@ -1,0 +1,4 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat
+11_P201812-2_4591498_AluY	967	T	C
+11_P201812-2_4591498_AluY	1261	G	A
+11_P201812-2_4591498_AluY	1262	G	A

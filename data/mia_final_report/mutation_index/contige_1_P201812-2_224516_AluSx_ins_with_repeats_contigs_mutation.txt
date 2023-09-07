@@ -1,0 +1,6 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat
+1_P201812-2_224516_AluSx	3398	A	G
+1_P201812-2_224516_AluSx	3402	A	G
+1_P201812-2_224516_AluSx	3547	G	C
+1_P201812-2_224516_AluSx	3591	G	C
+1_P201812-2_224516_AluSx	3594	G	T

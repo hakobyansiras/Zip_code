@@ -1,0 +1,12 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	8_772_906461_AluY	2505	T	G	T	A,G	30	37,44
+2	8_772_906461_AluY	2508	T	C	T	C	77	55
+3	8_772_906461_AluY	2513	A	G	A	G	86	50
+4	8_772_906461_AluY	2514	T	C	T	C	96	42
+5	8_772_906461_AluY	2782	T	G	T	A,G	11	103,81
+6	8_772_906461_AluY	2783	C	T	C	T	64	131
+7	8_772_906461_AluY	2784	T	C	T	C,G	12	174,10
+8	8_772_906461_AluY	2810	G	A	G	-	8	-
+9	8_772_906461_AluY	2812	C	A	C	-	2	-
+10	8_772_906461_AluY	2813	T	A	NA	NA	NA	NA
+11	8_772_906461_AluY	2814	C	A	NA	NA	NA	NA

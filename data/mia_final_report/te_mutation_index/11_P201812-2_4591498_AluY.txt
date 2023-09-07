@@ -1,0 +1,4 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	11_P201812-2_4591498_AluY	967	T	C	T	-	10	-
+2	11_P201812-2_4591498_AluY	1261	G	A	G	-	0	-
+3	11_P201812-2_4591498_AluY	1262	G	A	G	-	1	-

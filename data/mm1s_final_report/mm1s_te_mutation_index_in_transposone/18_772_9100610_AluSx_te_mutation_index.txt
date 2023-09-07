@@ -1,0 +1,11 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+18_772_9100610_AluSx 139 T C T - 28 - direct
+18_772_9100610_AluSx 144 A G A - 26 - direct
+18_772_9100610_AluSx 156 A G A - 35 - direct
+18_772_9100610_AluSx 270 A G A - 81 - direct
+18_772_9100610_AluSx 277 T C T - 47 - direct
+18_772_9100610_AluSx 290 T A T - 17 - direct
+18_772_9100610_AluSx 295 T A T - 16 - direct
+18_772_9100610_AluSx 300 T A T - 7 - direct
+18_772_9100610_AluSx 306 T A T - 10 - direct
+18_772_9100610_AluSx 311 T A T - 5 - direct

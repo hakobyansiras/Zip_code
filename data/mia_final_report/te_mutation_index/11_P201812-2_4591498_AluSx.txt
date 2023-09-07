@@ -1,0 +1,11 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	11_P201812-2_4591498_AluSx	967	T	C	T	-	40	-
+2	11_P201812-2_4591498_AluSx	1037	A	T	A	-	19	-
+3	11_P201812-2_4591498_AluSx	1047	T	G	T	-	21	-
+4	11_P201812-2_4591498_AluSx	1054	T	C	T	-	25	-
+5	11_P201812-2_4591498_AluSx	1115	G	C	G	-	38	-
+6	11_P201812-2_4591498_AluSx	1125	G	A	G	-	46	-
+7	11_P201812-2_4591498_AluSx	1159	G	C	G	-	38	-
+8	11_P201812-2_4591498_AluSx	1162	G	T	G	-	23	-
+9	11_P201812-2_4591498_AluSx	1261	G	A	G	-	3	-
+10	11_P201812-2_4591498_AluSx	1262	G	A	G	-	1	-

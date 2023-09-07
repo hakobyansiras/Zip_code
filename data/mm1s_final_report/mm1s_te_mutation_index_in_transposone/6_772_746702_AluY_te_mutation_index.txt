@@ -1,0 +1,3 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+6_772_746702_AluY 302 C T C - 17 - reverse complement
+6_772_746702_AluY 196 A C A C 38 290 reverse complement

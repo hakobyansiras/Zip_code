@@ -1,0 +1,10 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+3_P201812-2_316615_AluSx 1 A G A - 78 - direct
+3_P201812-2_316615_AluSx 5 A G A - 235 - direct
+3_P201812-2_316615_AluSx 126 A T A - 180 - direct
+3_P201812-2_316615_AluSx 128 T C T - 86 - direct
+3_P201812-2_316615_AluSx 231 T C T - 170 - direct
+3_P201812-2_316615_AluSx 240 A G A - 178 - direct
+3_P201812-2_316615_AluSx 296 C A C - 10 - direct
+3_P201812-2_316615_AluSx 305 C A C - 9 - direct
+3_P201812-2_316615_AluSx 312 C A C - 11 - direct

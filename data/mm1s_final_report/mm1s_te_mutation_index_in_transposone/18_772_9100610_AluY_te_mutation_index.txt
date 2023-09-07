@@ -1,0 +1,17 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+18_772_9100610_AluY 76 T A T - 85 - direct
+18_772_9100610_AluY 93 C T C - 92 - direct
+18_772_9100610_AluY 98 T C T - 101 - direct
+18_772_9100610_AluY 127 C A C - 16 - direct
+18_772_9100610_AluY 138 T C T - 25 - direct
+18_772_9100610_AluY 143 A G A - 31 - direct
+18_772_9100610_AluY 155 A G A - 37 - direct
+18_772_9100610_AluY 162 A G A - 40 - direct
+18_772_9100610_AluY 218 G C G - 61 - direct
+18_772_9100610_AluY 269 A G A - 66 - direct
+18_772_9100610_AluY 276 T C T - 38 - direct
+18_772_9100610_AluY 289 T A T - 30 - direct
+18_772_9100610_AluY 294 T A T - 27 - direct
+18_772_9100610_AluY 299 T A T - 17 - direct
+18_772_9100610_AluY 305 T A T - 10 - direct
+18_772_9100610_AluY 310 T A T - 4 - direct

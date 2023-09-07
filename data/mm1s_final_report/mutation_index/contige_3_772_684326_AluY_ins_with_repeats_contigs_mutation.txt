@@ -1,0 +1,2 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat
+3_772_684326_AluY	2353	C	T

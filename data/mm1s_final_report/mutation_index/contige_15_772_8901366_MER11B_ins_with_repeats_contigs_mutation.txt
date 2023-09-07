@@ -1,0 +1,1 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat

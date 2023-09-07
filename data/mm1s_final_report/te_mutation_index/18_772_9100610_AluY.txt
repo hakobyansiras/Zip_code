@@ -1,0 +1,17 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	18_772_9100610_AluY	338	T	A	T	-	85	-
+2	18_772_9100610_AluY	355	C	T	C	-	92	-
+3	18_772_9100610_AluY	360	T	C	T	-	101	-
+4	18_772_9100610_AluY	390	C	A	C	-	16	-
+5	18_772_9100610_AluY	401	T	C	T	-	25	-
+6	18_772_9100610_AluY	406	A	G	A	-	31	-
+7	18_772_9100610_AluY	418	A	G	A	-	37	-
+8	18_772_9100610_AluY	425	A	G	A	-	40	-
+9	18_772_9100610_AluY	481	G	C	G	-	61	-
+10	18_772_9100610_AluY	532	A	G	A	-	66	-
+11	18_772_9100610_AluY	539	T	C	T	-	38	-
+12	18_772_9100610_AluY	552	T	A	T	-	30	-
+13	18_772_9100610_AluY	557	T	A	T	-	27	-
+14	18_772_9100610_AluY	562	T	A	T	-	17	-
+15	18_772_9100610_AluY	568	T	A	T	-	10	-
+16	18_772_9100610_AluY	573	T	A	T	-	4	-

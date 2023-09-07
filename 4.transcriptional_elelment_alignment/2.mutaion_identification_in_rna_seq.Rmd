@@ -1,0 +1,229 @@
+---
+title: "mutation_identification_in_te_rna_seq"
+author: "Maria"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Functions
+```{r functions}
+check_nuc <- function(nuc)
+{
+  if(any(nuc == c("A", "T", "C", "G", "a", "t", "c", "g")))
+  {
+    return(T)
+  }else
+  {
+    return(F)
+  }
+}
+check_nuc_hetero <- function(nuc)
+{
+  if(any(nuc == c("M", "R", "W", "S", "Y", "K")))
+  {
+     return(T)
+  }else
+  {
+    return(F)
+  }
+}
+
+
+```
+
+#### Transposone mutation indentification in RNA-seq data MM1S
+```{r trasnposon_mutation_te}
+library(Biostrings)
+# read data
+#sequenses
+seq_files <-  dir(path = "../data/mm1s_results/mm1s_final_report/modified", full.names = T)
+seq_files <- seq_files[-grep("contige_15_772_8901366_MER11B", seq_files)]
+seq_files <- seq_files[-grep("desktop", seq_files)]
+
+#mutations locatino
+mutaions_loc_file <- dir(path = "../data/mm1s_results/mm1s_final_report/te_mutation_index", full.names = T)
+
+#file name
+file_names <- dir(path = "../data/mm1s_results/mm1s_final_report/te_mutation_index", full.names = F)
+file_names <- sapply(file_names, function(x)
+  {
+  x <- strsplit(x, ".txt")[[1]]
+  return(x)
+  })
+
+#information about transposone orientation
+transposone_location <- readxl::read_excel("../data/mm1s_results/mm1s_final_report/mm1s_transposon_location.xlsx", sheet = 1)
+
+for (i in seq_along(seq_files)) 
+  {
+  seq <-  readDNAStringSet(seq_files[i])
+  mutaions <- read.table(mutaions_loc_file[i], sep = "\t", colClasses = c(rep("character", 8)))
+  mutaions$position <- as.numeric(mutaions$position)
+  # define new mutation matrix
+  mutaions_in_te <- mutaions
+  mutaions_in_te$te_allele_1_count[mutaions_in_te$te_allele_1_count == 0] <- "-"
+  mutaions_in_te$te_allele_2_count[mutaions_in_te$te_allele_2_count == 0] <- "-"
+  mutaions_in_te$position <- "-"  
+  mutaions_in_te$transposone_orientation <- "-"
+
+  mutaions_in_te$te_allele_1 <- ifelse(is.na(mutaions_in_te$te_allele_1), "-", mutaions_in_te$te_allele_1)
+  mutaions_in_te$te_allele_2 <- ifelse(is.na(mutaions_in_te$te_allele_2), "-", mutaions_in_te$te_allele_2)
+  mutaions_in_te$te_allele_1_count <- ifelse(is.na(mutaions_in_te$te_allele_1_count), "-", mutaions_in_te$te_allele_1_count)
+  mutaions_in_te$te_allele_2_count <- ifelse(is.na(mutaions_in_te$te_allele_2_count), "-", mutaions_in_te$te_allele_2_count)
+  
+    
+  if(length(seq) == 8)
+  {
+    te_seq <- strsplit(x = as.character(seq[8]), "")[[1]]
+  }
+  if(length(seq) == 9)
+  {
+    te_seq <- strsplit(x = as.character(seq[9]), "")[[1]]
+  }
+  
+  if(length(grep(file_names[i], transposone_location$Transposone_ID)) > 0)
+  {
+      if(transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)] == "direct")
+  {
+    mutaions_in_te$transposone_orientation <- transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)]
+      for (j in 1:nrow(mutaions)) 
+    {
+    pos <- mutaions$position[j]
+    mutaions_in_te$position[j] <- pos-length(grep("-", te_seq[1:pos]))
+    
+      }
+  }
+   if(transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)] == "reverse complement")
+   {
+      mutaions_in_te$transposone_orientation <- transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)]
+      for (j in 1:nrow(mutaions)) 
+        {
+        te_seq_no_gap <- te_seq[-which(te_seq == "-")]
+        pos <- mutaions$position[j]
+        pos <- pos-length(grep("-", te_seq[1:pos]))
+        mutaions_in_te$position[j] <- length(te_seq_no_gap) - pos+1
+
+    
+      }
+   }
+    
+    if( nrow(mutaions_in_te) > 1)
+    {
+    mutaions_in_te <- as.data.frame(apply(mutaions_in_te, 2, function(x)
+    {
+    x <- ifelse(is.na(x ), "-", x )
+    return(x)
+    })) 
+    }
+ 
+  
+  write.table(mutaions_in_te,paste("../data/mm1s_results/mm1s_final_report/te_mutation_index_in_transposone/", file_names[i], "_te_mutation_index.txt", sep = ""), 
+              quote = F, row.names = F)
+  }
+  
+
+
+}
+
+```
+
+#### Transposone mutation indentification in RNA-seq data MIA
+
+```{r trasnposon_mutation_te}
+library(Biostrings)
+# read data
+#sequenses
+seq_files <-  dir(path = "../data/mia_results/mia_final_report/modified", full.names = T)
+
+#mutations locatino
+mutaions_loc_file <- dir(path = "../data/mia_results/mia_final_report/te_mutation_index", full.names = T)
+
+#file name
+file_names <- dir(path = "../data/mia_results/mia_final_report/te_mutation_index", full.names = F)
+file_names <- sapply(file_names, function(x)
+  {
+  x <- strsplit(x, ".txt")[[1]]
+  return(x)
+  })
+
+#information about transposone orientation
+transposone_location <- readxl::read_excel("../data/mia_results/mia_final_report/mia_transposon_location.xlsx", sheet = 1)
+
+for (i in seq_along(seq_files)) 
+  {
+  seq <-  readDNAStringSet(seq_files[i])
+  mutaions <- read.table(mutaions_loc_file[i], sep = "\t", colClasses = c(rep("character", 8)))
+  mutaions$position <- as.numeric(mutaions$position)
+  # define new mutation matrix
+  mutaions_in_te <- mutaions
+  mutaions_in_te$te_allele_1_count[mutaions_in_te$te_allele_1_count == 0] <- "-"
+  mutaions_in_te$te_allele_2_count[mutaions_in_te$te_allele_2_count == 0] <- "-"
+  mutaions_in_te$position <- "-"  
+  mutaions_in_te$transposone_orientation <- "-"
+
+  mutaions_in_te$te_allele_1 <- ifelse(is.na(mutaions_in_te$te_allele_1), "-", mutaions_in_te$te_allele_1)
+  mutaions_in_te$te_allele_2 <- ifelse(is.na(mutaions_in_te$te_allele_2), "-", mutaions_in_te$te_allele_2)
+  mutaions_in_te$te_allele_1_count <- ifelse(is.na(mutaions_in_te$te_allele_1_count), "-", mutaions_in_te$te_allele_1_count)
+  mutaions_in_te$te_allele_2_count <- ifelse(is.na(mutaions_in_te$te_allele_2_count), "-", mutaions_in_te$te_allele_2_count)
+  
+    
+  if(length(seq) == 13)
+  {
+    te_seq <- strsplit(x = as.character(seq[13]), "")[[1]]
+  }
+  if(length(seq) == 14)
+  {
+    te_seq <- strsplit(x = as.character(seq[14]), "")[[1]]
+  }
+  
+  if(length(grep(file_names[i], transposone_location$Transposone_ID)) > 0)
+  {
+      if(transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)] == "direct")
+  {
+    mutaions_in_te$transposone_orientation <- transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)]
+      for (j in 1:nrow(mutaions)) 
+    {
+    pos <- mutaions$position[j]
+    mutaions_in_te$position[j] <- pos-length(grep("-", te_seq[1:pos]))
+    
+      }
+  }
+   if(transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)] == "reverse complement")
+   {
+      mutaions_in_te$transposone_orientation <- transposone_location$`Transposone orientation`[grep(file_names[i], transposone_location$Transposone_ID)]
+      for (j in 1:nrow(mutaions)) 
+        {
+        te_seq_no_gap <- te_seq[-which(te_seq == "-")]
+        pos <- mutaions$position[j]
+        pos <- pos-length(grep("-", te_seq[1:pos]))
+        mutaions_in_te$position[j] <- length(te_seq_no_gap) - pos+1
+
+    
+      }
+   }
+    
+    if( nrow(mutaions_in_te) > 1)
+    {
+    mutaions_in_te <- as.data.frame(apply(mutaions_in_te, 2, function(x)
+    {
+    x <- ifelse(is.na(x ), "-", x )
+    return(x)
+    })) 
+    }
+ 
+  
+  write.table(mutaions_in_te,paste("../data/mia_results/mia_final_report/mia_te_mutation_index_in_transposone/", file_names[i], "_te_mutation_index.txt", sep = ""), 
+              quote = F, row.names = F)
+  }
+  
+
+
+}
+
+```
+
+

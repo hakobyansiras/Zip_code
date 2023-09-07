@@ -1,0 +1,18 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+5_P201812-2_4035111_AluJb 309 C t C - - - reverse complement
+5_P201812-2_4035111_AluJb 306 A t A - - - reverse complement
+5_P201812-2_4035111_AluJb 305 C t C - - - reverse complement
+5_P201812-2_4035111_AluJb 297 A t A - - - reverse complement
+5_P201812-2_4035111_AluJb 269 A g A - 4 - reverse complement
+5_P201812-2_4035111_AluJb 261 A g A - 1 - reverse complement
+5_P201812-2_4035111_AluJb 238 T c T - 123 - reverse complement
+5_P201812-2_4035111_AluJb 155 A g A - 117 - reverse complement
+5_P201812-2_4035111_AluJb 152 T c T - 170 - reverse complement
+5_P201812-2_4035111_AluJb 139 A g A - 153 - reverse complement
+5_P201812-2_4035111_AluJb 120 A t A - 196 - reverse complement
+5_P201812-2_4035111_AluJb 94 G c G - 171 - reverse complement
+5_P201812-2_4035111_AluJb 70 C g C - 168 - reverse complement
+5_P201812-2_4035111_AluJb 63 T c T - 147 - reverse complement
+5_P201812-2_4035111_AluJb 48 A g A - 199 - reverse complement
+5_P201812-2_4035111_AluJb 11 T c T - 39 - reverse complement
+5_P201812-2_4035111_AluJb 5 T c T - 25 - reverse complement

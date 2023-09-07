@@ -1,0 +1,7 @@
+ID	position	nucleotide_in_contig	nucleotide_in_repeat	te_allele_1	te_allele_2	te_allele_1_count	te_allele_2_count
+1	9_772_927753_AluSx	222	T	G	T	G,A	13	192,23
+2	9_772_927753_AluSx	288	T	A	T	-	33	-
+3	9_772_927753_AluSx	292	T	A	T	-	33	-
+4	9_772_927753_AluSx	296	T	A	T	-	28	-
+5	9_772_927753_AluSx	300	T	A	T	-	24	-
+6	9_772_927753_AluSx	307	T	A	T	-	4	-

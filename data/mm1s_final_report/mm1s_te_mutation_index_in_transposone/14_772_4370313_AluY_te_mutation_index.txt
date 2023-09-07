@@ -1,0 +1,2 @@
+ID position nucleotide_in_contig nucleotide_in_repeat te_allele_1 te_allele_2 te_allele_1_count te_allele_2_count transposone_orientation
+14_772_4370313_AluY 4 A G A G 10 24 reverse complement
